@@ -5,11 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Surface
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.theapache64.phokuzed.ui.screen.dashboard.DashboardScreen
-import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 import com.theapache64.phokuzed.ui.theme.PhokuzedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,31 +16,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // TODO: Splash still slow? check release build also
         setContent {
             val navController = rememberNavController()
             PhokuzedTheme {
                 Surface {
-                    NavHost(navController = navController, startDestination = Screen.Splash.route) {
-
-                        // Splash
-                        composable(Screen.Splash.route) {
-                            SplashScreen(
-                                onSplashFinished = {
-                                    // Move to dashboard
-                                    navController.navigate(Screen.Dashboard.route) {
-                                        popUpTo(Screen.Splash.route) {
-                                            inclusive = true
-                                        }
-                                    }
-                                }
-                            )
-                        }
-
-                        // Dashboard
-                        composable(Screen.Dashboard.route) {
-                            DashboardScreen()
-                        }
-                    }
+                    AppNavigation(navController)
                 }
             }
         }

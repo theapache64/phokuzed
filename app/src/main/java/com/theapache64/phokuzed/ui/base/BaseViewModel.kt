@@ -6,9 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-abstract class BaseViewModel<VS, I, VA> : ViewModel() {
+abstract class BaseViewModel<VS, I, VA>(
+    defaultViewState: VS
+) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<VS?>(null)
+    private val _viewState = MutableStateFlow<VS>(defaultViewState)
     val viewState = _viewState.asStateFlow()
 
     private val _viewAction = mutableEventFlow<VA>()

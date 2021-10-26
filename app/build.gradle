@@ -66,4 +66,24 @@ dependencies {
     // Navigation Compose Hilt Integration : Navigation Compose Hilt Integration
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
+
+    // Retrofit : A type-safe HTTP client for Android and Java.
+    def retrofit_version = '2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    // Converter: Moshi : A Retrofit Converter which uses Moshi for serialization.
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+
+    // Moshi : A modern JSON API for Android and Java
+    def moshi_version = '1.12.0'
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+
+    // Retrosheet : Google sheet access
+    implementation 'com.github.theapache64:retrosheet:2.0.0-beta03'
+
+    // Android Preferences KTX : Kotlin extensions for preferences
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+
+    // Timber : No-nonsense injectable logging.
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 }
