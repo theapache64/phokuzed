@@ -23,10 +23,10 @@ fun SplashScreen(
     onSplashFinished: () -> Unit
 ) {
 
-    val versionName by viewModel.versionName.collectAsState()
-    val isSplashFinished by viewModel.isSplashFinished.collectAsState(initial = false)
+    val viewState by viewModel.viewState.collectAsState()
+    val viewAction by viewModel.viewAction.collectAsState(null)
 
-    if (isSplashFinished) {
+    if (viewAction is SplashViewAction.GoToMain) {
         onSplashFinished()
     }
 
@@ -43,12 +43,16 @@ fun SplashScreen(
                 .align(Alignment.Center),
         )
 
-        // Version number
-        Text(
-            text = versionName,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp)
-        )
+        when (viewState) {
+            is SplashViewState.Loaded -> {
+                // Version number
+                Text(
+                    text = (viewState as SplashViewState.Loaded).versionName,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 20.dp)
+                )
+            }
+        }
     }
 }

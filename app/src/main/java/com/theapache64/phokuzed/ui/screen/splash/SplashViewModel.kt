@@ -1,34 +1,31 @@
 package com.theapache64.phokuzed.ui.screen.splash
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.BuildConfig
-import com.theapache64.phokuzed.util.flow.mutableEventFlow
+import com.theapache64.phokuzed.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor() : ViewModel() {
+class SplashViewModel @Inject constructor() :
+    BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>() {
 
     companion object {
         private const val SPLASH_DURATION_IN_MILLIS = 1500L
     }
 
-    private val _versionName = MutableStateFlow("v${BuildConfig.VERSION_NAME}")
-    val versionName = _versionName.asStateFlow()
-
-    private val _isSplashFinished = mutableEventFlow<Boolean>()
-    val isSplashFinished = _isSplashFinished.asSharedFlow()
-
     init {
+        emitViewState(SplashViewState.Loaded("v${BuildConfig.VERSION_NAME}"))
+
         viewModelScope.launch {
             delay(SPLASH_DURATION_IN_MILLIS)
-            _isSplashFinished.tryEmit(true)
+            emitViewAction(SplashViewAction.GoToMain)
         }
+    }
+
+    override fun onInteraction(interactor: SplashInteractor) {
+        // no external interaction
     }
 }

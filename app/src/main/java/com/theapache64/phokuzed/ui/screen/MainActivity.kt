@@ -30,8 +30,12 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Splash.route) {
                             SplashScreen(
                                 onSplashFinished = {
-                                    navController.popBackStack() // Remove splash from stack
-                                    navController.navigate(Screen.Dashboard.route) // Move to dashboard
+                                    // Move to dashboard
+                                    navController.navigate(Screen.Dashboard.route) {
+                                        popUpTo(Screen.Splash.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }
