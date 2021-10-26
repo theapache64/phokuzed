@@ -26,6 +26,7 @@ fun SplashScreen(
     val viewState by viewModel.viewState.collectAsState()
     val viewAction by viewModel.viewAction.collectAsState(null)
 
+    // TODO: Handle update : show update dialog
     if (viewAction is SplashViewAction.GoToMain) {
         onSplashFinished()
     }

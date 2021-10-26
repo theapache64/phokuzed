@@ -6,7 +6,6 @@ import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,14 +34,26 @@ class SplashViewModel @Inject constructor(
                         // do nothing
                     }
                     is Resource.Loading -> {
-                        //
+                        emitViewState(SplashViewState.ConfigLoading)
+                    }
+
+                    is Resource.Success -> {
+                        val config = it.data
+                        configRepo.saveRemoteConfig(config)
+
+                        val currentVersionCode = BuildConfig.VERSION_CODE
+                        val mandatoryVersionCode = config.mandatoryVersionCode
+
+                        if (currentVersionCode < mandatoryVersionCode) {
+                            // need to update
+                            emitViewAction(SplashViewAction.NeedUpdate)
+                        } else {
+                            emitViewAction(SplashViewAction.GoToMain)
+                        }
+
                     }
                     is Resource.Error -> {
                         emitViewState(SplashViewState.ConfigError(it.errorData))
-                    }
-                    is Resource.Success -> {
-                        configRepo.saveRemoteConfig(it.data)
-                        emitViewAction(SplashViewAction.GoToMain)
                     }
                 }
             }
