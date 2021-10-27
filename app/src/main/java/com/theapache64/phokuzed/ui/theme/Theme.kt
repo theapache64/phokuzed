@@ -12,7 +12,8 @@ private val DarkColorPalette = darkColors(
     secondary = Daintree_1000,
     onSecondary = Color.White,
     surface = Daintree,
-    onSurface = Color.White
+    onSurface = Color.White,
+
 )
 
 @Composable

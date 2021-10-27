@@ -4,4 +4,7 @@
     <string name="action_click_me">Click Me!</string>
     <string name="label_hello_world">Hello World!</string>
     <string name="label_hello_compose">Hello Compose!</string>
+    <string name="splash_update_dialog_title">Update!</string>
+    <string name="splash_update_dialog_content">Uh ho! It looks like you\'re using an older version of the app. Please update</string>
+    <string name="splash_action_update">UPDATE</string>
 </resources>

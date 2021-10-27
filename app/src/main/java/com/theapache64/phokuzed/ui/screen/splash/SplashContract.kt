@@ -10,11 +10,12 @@ sealed class SplashViewState {
 
 // Interactors (UI to ViewModel)
 sealed class SplashInteractor {
-
+    object UpdateClick : SplashInteractor()
 }
 
 // ViewAction (ViewModel to UI - to notify one-time events)
 sealed class SplashViewAction {
     object GoToMain : SplashViewAction()
     object NeedUpdate : SplashViewAction()
+    data class OpenUrl(val url: String) : SplashViewAction()
 }

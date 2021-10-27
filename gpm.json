@@ -69,6 +69,20 @@
     "name": "Timber",
     "description": "No-nonsense injectable logging."
    }
+  },
+  {
+   "id": 7,
+   "type": "implementation",
+   "installed_name": "common-java8",
+   "gpm_dep": {
+    "artifact_id": "lifecycle-common-java8",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-common-java8",
+    "get_from": "Google",
+    "group_id": "androidx.lifecycle",
+    "name": "Android Lifecycle Common For Java 8 Language",
+    "description": "Android Lifecycle-Common for Java 8 Language"
+   }
   }
  ]
 }
