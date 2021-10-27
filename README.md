@@ -10,6 +10,10 @@
 
 > An Android project template with MVVM, Hilt, Navigation and Compose
 
+## 🔴 Status
+
+**UNDER ACTIVE DEVELOPMENT**
+
 ## ✍️ Author
 
 👤 **theapache64**
