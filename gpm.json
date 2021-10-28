@@ -83,6 +83,90 @@
     "name": "Android Lifecycle Common For Java 8 Language",
     "description": "Android Lifecycle-Common for Java 8 Language"
    }
+  },
+  {
+   "id": 8,
+   "type": "implementation",
+   "installed_name": "expekt",
+   "gpm_dep": {
+    "artifact_id": "expekt",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.theapache64/expekt",
+    "get_from": "JCenter",
+    "group_id": "com.theapache64",
+    "name": "Expekt",
+    "description": "An assertion library for Kotlin"
+   }
+  },
+  {
+   "id": 9,
+   "type": "testImplementation",
+   "installed_name": "mockito",
+   "gpm_dep": {
+    "artifact_id": "mockito-core",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/org.mockito/mockito-core",
+    "get_from": "Central",
+    "group_id": "org.mockito",
+    "name": "Mockito Core",
+    "description": "Mockito mock objects library core API and implementation"
+   }
+  },
+  {
+   "id": 10,
+   "type": "testImplementation",
+   "installed_name": "cashapp turbine",
+   "gpm_dep": {
+    "artifact_id": "turbine-jvm",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/app.cash.turbine/turbine-jvm",
+    "get_from": "Central",
+    "group_id": "app.cash.turbine",
+    "name": "Turbine",
+    "description": "A small testing library for kotlinx.coroutines Flow."
+   }
+  },
+  {
+   "id": 11,
+   "type": "testImplementation",
+   "installed_name": "core-testing",
+   "gpm_dep": {
+    "artifact_id": "core-testing",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.arch.core/core-testing",
+    "get_from": "Google",
+    "group_id": "androidx.arch.core",
+    "name": "Android Core Testing",
+    "description": "Android Core-Testing"
+   }
+  },
+  {
+   "id": 12,
+   "type": "testImplementation",
+   "installed_name": "coroutines-test",
+   "gpm_dep": {
+    "artifact_id": "kotlinx-coroutines-test",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-test",
+    "get_from": "Central",
+    "group_id": "org.jetbrains.kotlinx",
+    "name": "Kotlinx Coroutines Test",
+    "description": "Coroutines support libraries for Kotlin"
+   }
+  },
+  {
+   "id": 13,
+   "type": "implementation",
+   "installed_name": "junit-ktx",
+   "gpm_dep": {
+    "artifact_id": "junit-ktx",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.test.ext/junit-ktx",
+    "get_from": "Google",
+    "group_id": "androidx.test.ext",
+    "name": "AndroidX Test Library",
+    "description": "The AndroidX Test Library provides an extensive framework for testing Android apps"
+   }
   }
  ]
 }

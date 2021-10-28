@@ -19,7 +19,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.util.exhaustive
-import timber.log.Timber
 
 @Composable
 fun SplashScreen(
@@ -33,6 +32,8 @@ fun SplashScreen(
 
 
     LaunchedEffect(Unit) {
+        viewModel.init()
+
         if (context is ComponentActivity) {
             context.lifecycle.addObserver(viewModel)
         }
@@ -43,7 +44,7 @@ fun SplashScreen(
         is SplashViewAction.GoToMain -> {
             onSplashFinished()
         }
-        SplashViewAction.NeedUpdate -> {
+        SplashViewAction.ShowUpdateDialog -> {
             UpdateDialog(
                 onUpdateClicked = {
                     viewModel.onInteraction(SplashInteractor.UpdateClick)

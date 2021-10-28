@@ -3,7 +3,7 @@ package com.theapache64.phokuzed.ui.screen.splash
 import androidx.lifecycle.*
 import com.theapache64.phokuzed.BuildConfig
 import com.theapache64.phokuzed.data.remote.Config
-import com.theapache64.phokuzed.data.repo.ConfigRepoImpl
+import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
 import com.theapache64.phokuzed.util.exhaustive
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val configRepoImpl: ConfigRepoImpl
+    private val configRepo: ConfigRepo
 ) : BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>(
     defaultViewState = SplashViewState.ConfigLoading
 ), DefaultLifecycleObserver {
@@ -31,9 +31,9 @@ class SplashViewModel @Inject constructor(
             "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
     }
 
-    init {
+    fun init() {
         viewModelScope.launch {
-            configRepoImpl.getRemoteConfig().collect {
+            configRepo.getRemoteConfig().collect {
                 when (it) {
                     is Resource.Idle -> {
                         // do nothing
@@ -45,7 +45,7 @@ class SplashViewModel @Inject constructor(
                     is Resource.Success -> {
                         val config = it.data
                         // Saving new config
-                        configRepoImpl.saveRemoteConfig(config)
+                        configRepo.saveRemoteConfig(config)
                         performVersionCheck(config)
                     }
                     is Resource.Error -> {
@@ -63,7 +63,7 @@ class SplashViewModel @Inject constructor(
 
         if (currentVersionCode < mandatoryVersionCode) {
             // need to update
-            emitViewAction(SplashViewAction.NeedUpdate)
+            emitViewAction(SplashViewAction.ShowUpdateDialog)
         } else {
             emitViewAction(SplashViewAction.GoToMain)
         }
@@ -86,7 +86,7 @@ class SplashViewModel @Inject constructor(
         if (resumeCount > 1) {
             // After every resume, do version check
             viewModelScope.launch {
-                val config = configRepoImpl.getLocalConfig()
+                val config = configRepo.getLocalConfig()
                 performVersionCheck(config)
             }
         }

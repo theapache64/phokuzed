@@ -41,6 +41,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues true
+        }
+    }
 }
 
 dependencies {
@@ -89,4 +96,26 @@ dependencies {
 
     // Android Lifecycle Common For Java 8 Language : Android Lifecycle-Common for Java 8 Language
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.0'
+
+    // Expekt : An assertion library for Kotlin
+    testImplementation 'com.github.theapache64:expekt:1.0.0'
+
+    // Mockito Core : Mockito mock objects library core API and implementation
+    def mockitoVersion = '4.0.0'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoVersion"
+
+    // Turbine : A small testing library for kotlinx.coroutines Flow.
+    testImplementation 'app.cash.turbine:turbine-jvm:0.7.0'
+
+    // Android Core Testing : Android Core-Testing
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    // Kotlinx Coroutines Test : Coroutines support libraries for Kotlin
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2'
+
+    // AndroidX Test Library : The AndroidX Test Library provides an extensive framework for testing Android apps
+    implementation 'androidx.test.ext:junit-ktx:1.1.4-alpha03'
+
+    implementation 'com.hotstar:compass:1.0.0-alpha03'
 }
