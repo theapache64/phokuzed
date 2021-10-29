@@ -14,6 +14,14 @@
 
 **UNDER ACTIVE DEVELOPMENT**
 
+
+## Terminologies
+
+| Terminology | Meaning                          |
+|:------------|:---------------------------------|
+| pRules      | Rules that are added by Phokuzed |
+
+
 ## ✍️ Author
 
 👤 **theapache64**
