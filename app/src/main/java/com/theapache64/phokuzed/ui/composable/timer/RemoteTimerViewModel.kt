@@ -72,7 +72,7 @@ class RemoteTimerViewModel @Inject constructor(
             while (true) {
                 remoteSeconds++
                 val diff = targetSeconds - remoteSeconds
-                if (diff > 0) {
+                if (diff >= 0) {
                     val hours = diff / (60 * 60 * 1000) % 24
                     val minutes = diff / 60 % 60
                     val seconds = diff % 60
