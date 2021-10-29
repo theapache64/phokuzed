@@ -167,6 +167,20 @@
     "name": "AndroidX Test Library",
     "description": "The AndroidX Test Library provides an extensive framework for testing Android apps"
    }
+  },
+  {
+   "id": 14,
+   "type": "implementation",
+   "installed_name": "compose animation",
+   "gpm_dep": {
+    "artifact_id": "animation",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.compose.animation/animation",
+    "get_from": "Google",
+    "group_id": "androidx.compose.animation",
+    "name": "Compose Animation",
+    "description": "Compose animation library"
+   }
   }
  ]
 }

@@ -7,4 +7,6 @@
     <string name="splash_update_dialog_title">Update!</string>
     <string name="splash_update_dialog_content">Uh ho! It looks like you\'re using an older version of the app. Please update</string>
     <string name="splash_action_update">UPDATE</string>
+    <string name="action_start">START</string>
+    <string name="action_edit_block">EDIT BLOCKLIST</string>
 </resources>

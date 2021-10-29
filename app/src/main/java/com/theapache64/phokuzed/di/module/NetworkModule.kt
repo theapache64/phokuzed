@@ -4,6 +4,7 @@ import com.github.theapache64.retrosheet.RetrosheetInterceptor
 import com.squareup.moshi.Moshi
 import com.theapache64.phokuzed.core.Retrosheet
 import com.theapache64.phokuzed.data.remote.Api
+import com.theapache64.phokuzed.data.remote.worldtime.WorldTimeApi
 import com.theapache64.phokuzed.util.calladapter.flow.FlowResourceCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -41,17 +42,23 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+    fun provideApi(okHttpClient: OkHttpClient, moshi: Moshi): Api {
         return Retrofit.Builder()
             .baseUrl("https://docs.google.com/spreadsheets/d/1aouhKq50Z3RkW0ztMhl2_3Fx5rJjD19aaxrzK62J-O4/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(FlowResourceCallAdapterFactory())
             .build()
+            .create(Api::class.java)
     }
 
     @Provides
-    fun provideApi(retrofit : Retrofit) : Api {
-        return retrofit.create(Api::class.java)
+    fun provideWorldTimeApi(moshi: Moshi): WorldTimeApi {
+        return Retrofit.Builder()
+            .baseUrl("https://worldtimeapi.org/api/")
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(FlowResourceCallAdapterFactory())
+            .build()
+            .create(WorldTimeApi::class.java)
     }
 }

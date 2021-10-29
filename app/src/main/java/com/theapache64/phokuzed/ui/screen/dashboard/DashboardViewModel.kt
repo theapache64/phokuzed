@@ -1,18 +1,20 @@
 package com.theapache64.phokuzed.ui.screen.dashboard
 
-import androidx.lifecycle.ViewModel
-import com.theapache64.phokuzed.R
+import com.theapache64.phokuzed.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor() : ViewModel() {
-    private val _greetingsRes = MutableStateFlow(R.string.label_hello_world)
-    val greetingsRes = _greetingsRes.asStateFlow()
-
-    fun onClickMeClicked() {
-        _greetingsRes.value = R.string.label_hello_compose
+class DashboardViewModel @Inject constructor() :
+    BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
+        defaultViewState = DashboardViewState.Active
+    ) {
+    override fun onInteraction(interactor: DashboardInteractor) {
+        when (interactor) {
+            DashboardInteractor.AddToBlockListClicked -> TODO()
+            DashboardInteractor.EditBlockListClicked -> TODO()
+            DashboardInteractor.ExtendBlockTimerClicked -> TODO()
+            DashboardInteractor.StartClicked -> TODO()
+        }
     }
 }
