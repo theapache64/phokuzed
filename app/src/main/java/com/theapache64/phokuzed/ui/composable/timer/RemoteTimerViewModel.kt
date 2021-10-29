@@ -70,6 +70,7 @@ class RemoteTimerViewModel @Inject constructor(
         viewModelScope.launch {
             isRunning = true
             while (true) {
+                remoteSeconds++
                 val diff = targetSeconds - remoteSeconds
                 if (diff > 0) {
                     val hours = diff / (60 * 60 * 1000) % 24
@@ -82,10 +83,10 @@ class RemoteTimerViewModel @Inject constructor(
                     emitViewState(RemoteTimerViewState.NewTime("$hoursString:$minutesString:$secondsString"))
                 } else {
                     onFinished.invoke()
+                    break
                 }
 
                 delay(1000)
-                remoteSeconds++
             }
         }
     }

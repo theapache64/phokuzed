@@ -59,8 +59,8 @@ fun ActiveUi(
         modifier = modifier.fillMaxSize()
     ) {
 
-        CountDownTimer(targetSeconds = (System.currentTimeMillis() / 1000) + (10 * 60)) {
-
+        CountDownTimer(targetSeconds = (System.currentTimeMillis() / 1000) + (2 * 60)) {
+            println("Finished")
         }
 
         Column(
