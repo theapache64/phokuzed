@@ -8,42 +8,50 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CountDownTimerViewModel @Inject constructor(
+class RemoteTimerViewModel @Inject constructor(
     private val worldTimeApi: WorldTimeApi
-) : BaseViewModel<TimerViewState, TimerInteractor, TimerViewAction>(
-    defaultViewState = TimerViewState.Loading
+) : BaseViewModel<RemoteTimerViewState, RemoteTimerInteractor, RemoteTimerViewAction>(
+    defaultViewState = RemoteTimerViewState.Loading
 ) {
+    init {
+        Timber.d("New viewModel: created ")
+    }
 
-    override fun onInteraction(interactor: TimerInteractor) {
+    override fun onInteraction(interactor: RemoteTimerInteractor) {
         when (interactor) {
-            is TimerInteractor.Init -> {
-                ignite(interactor)
+            is RemoteTimerInteractor.StartTimer -> {
+                init(interactor)
             }
         }
     }
 
-
-    private fun ignite(
-        interactor: TimerInteractor.Init
+    private var isRunning = false
+    private fun init(
+        interactorRemote: RemoteTimerInteractor.StartTimer
     ) {
+        if (isRunning) {
+            return
+        }
+
         viewModelScope.launch {
             worldTimeApi.getTime().collect {
                 when (it) {
                     is Resource.Loading -> {
-                        emitViewState(TimerViewState.Loading)
+                        emitViewState(RemoteTimerViewState.Loading)
                     }
                     is Resource.Success -> {
-                        alignTime(
+                        startPeriodicUpdate(
                             _remoteSeconds = it.data.unixtime,
-                            targetSeconds = interactor.targetSeconds,
-                            onFinished = interactor.onFinished
+                            targetSeconds = interactorRemote.targetSeconds,
+                            onFinished = interactorRemote.onFinished
                         )
                     }
                     is Resource.Error -> {
-                        emitViewState(TimerViewState.Error(it.errorData))
+                        emitViewState(RemoteTimerViewState.Error(it.errorData))
                     }
                     is Resource.Idle -> {
                         // do nothing
@@ -53,13 +61,14 @@ class CountDownTimerViewModel @Inject constructor(
         }
     }
 
-    private fun alignTime(
+    private fun startPeriodicUpdate(
         _remoteSeconds: Long,
         targetSeconds: Long,
         onFinished: () -> Unit
     ) {
         var remoteSeconds = _remoteSeconds
         viewModelScope.launch {
+            isRunning = true
             while (true) {
                 val diff = targetSeconds - remoteSeconds
                 if (diff > 0) {
@@ -70,7 +79,7 @@ class CountDownTimerViewModel @Inject constructor(
                     val hoursString = String.format("%02d", hours)
                     val minutesString = String.format("%02d", minutes)
                     val secondsString = String.format("%02d", seconds)
-                    emitViewState(TimerViewState.Success("$hoursString:$minutesString:$secondsString"))
+                    emitViewState(RemoteTimerViewState.NewTime("$hoursString:$minutesString:$secondsString"))
                 } else {
                     onFinished.invoke()
                 }
