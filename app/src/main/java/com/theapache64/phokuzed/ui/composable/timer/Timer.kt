@@ -54,27 +54,19 @@ fun CountDownTimer(
     val viewState by viewModel.viewState.collectAsState()
     var displayTime by remember { mutableStateOf("") }
 
-    when(viewState){
+    LaunchedEffect(Unit) {
+        viewModel.onInteraction(TimerInteractor.Init(targetSeconds, onFinished))
+    }
+
+    displayTime = when (viewState) {
         TimerViewState.Loading -> {
-            displayTime = "LO:AD:ING"
+            "LO:AD:ING"
         }
         is TimerViewState.Error -> {
-            displayTime = (viewState as TimerViewState.Error).reason
+            (viewState as TimerViewState.Error).reason
         }
         is TimerViewState.Success -> {
-            val diff = targetSeconds - (viewState as TimerViewState.Success).currentSeconds
-            if (diff > 0) {
-                val hours = diff / (60 * 60 * 1000) % 24
-                val minutes = diff / 60 % 60
-                val seconds = diff % 60
-
-                val hoursString = String.format("%02d", hours)
-                val minutesString = String.format("%02d", minutes)
-                val secondsString = String.format("%02d", seconds)
-                displayTime = "$hoursString:$minutesString:$secondsString"
-            } else {
-                onFinished()
-            }
+            (viewState as TimerViewState.Success).remainingTime
         }
     }
 

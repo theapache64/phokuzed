@@ -17,7 +17,18 @@ class CountDownTimerViewModel @Inject constructor(
     defaultViewState = TimerViewState.Loading
 ) {
 
-    init {
+    override fun onInteraction(interactor: TimerInteractor) {
+        when (interactor) {
+            is TimerInteractor.Init -> {
+                ignite(interactor)
+            }
+        }
+    }
+
+
+    private fun ignite(
+        interactor: TimerInteractor.Init
+    ) {
         viewModelScope.launch {
             worldTimeApi.getTime().collect {
                 when (it) {
@@ -25,8 +36,11 @@ class CountDownTimerViewModel @Inject constructor(
                         emitViewState(TimerViewState.Loading)
                     }
                     is Resource.Success -> {
-                        emitViewState(TimerViewState.Success(it.data.unixtime))
-                        alignTime()
+                        alignTime(
+                            _remoteSeconds = it.data.unixtime,
+                            targetSeconds = interactor.targetSeconds,
+                            onFinished = interactor.onFinished
+                        )
                     }
                     is Resource.Error -> {
                         emitViewState(TimerViewState.Error(it.errorData))
@@ -39,19 +53,33 @@ class CountDownTimerViewModel @Inject constructor(
         }
     }
 
-    private fun alignTime() {
+    private fun alignTime(
+        _remoteSeconds: Long,
+        targetSeconds: Long,
+        onFinished: () -> Unit
+    ) {
+        var remoteSeconds = _remoteSeconds
         viewModelScope.launch {
             while (true) {
-                val currentState = viewState.value
-                if (currentState is TimerViewState.Success) {
-                    emitViewState(TimerViewState.Success(currentState.currentSeconds + 1))
+                val diff = targetSeconds - remoteSeconds
+                if (diff > 0) {
+                    val hours = diff / (60 * 60 * 1000) % 24
+                    val minutes = diff / 60 % 60
+                    val seconds = diff % 60
+
+                    val hoursString = String.format("%02d", hours)
+                    val minutesString = String.format("%02d", minutes)
+                    val secondsString = String.format("%02d", seconds)
+                    emitViewState(TimerViewState.Success("$hoursString:$minutesString:$secondsString"))
+                } else {
+                    onFinished.invoke()
                 }
+
                 delay(1000)
+                remoteSeconds++
             }
         }
     }
 
-    override fun onInteraction(interactor: TimerInteractor) {
-        error("No interaction handled")
-    }
+
 }
