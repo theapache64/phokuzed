@@ -24,7 +24,7 @@ import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.composable.timer.CountDownTimer
 import com.theapache64.phokuzed.util.exhaustive
 
-private val bottomPadding = 30.dp
+val bottomPadding = 30.dp
 
 @Suppress("UnnecessaryVariable")
 @Composable
@@ -34,7 +34,6 @@ fun DashboardScreen(
     val dynViewState by viewModel.viewState.collectAsState()
     val viewState = dynViewState
     WatchViewAction(viewModel)
-
 
     Box(
         modifier = Modifier.padding(10.dp)
@@ -123,98 +122,5 @@ fun CalculatingUi(
 ) {
     CenterBox {
         Text(text = stringResource(id = message))
-    }
-}
-
-@Composable
-fun ActiveUi(
-    targetSeconds: Long,
-    onAddToBlocklistClicked: () -> Unit,
-    onExtendBlockTimerClicked: () -> Unit,
-    onTimerFinished: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-
-        CountDownTimer(
-            targetSeconds = targetSeconds,
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            onTimerFinished()
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = bottomPadding)
-        ) {
-            Button(
-                onClick = {
-                    onAddToBlocklistClicked()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.action_add_to_blocklist))
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Button(
-                onClick = {
-                    onExtendBlockTimerClicked()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.action_edit_block))
-            }
-        }
-
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun IdleUi(
-    onStartClicked: () -> Unit,
-    onEditBlockListClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            /*Action : Start*/
-            Button(
-                onClick = {
-                    onStartClicked()
-                },
-            ) {
-                Text(text = stringResource(id = R.string.action_start))
-            }
-        }
-
-
-        /*Action : Edit Blocklist*/
-        Button(
-            onClick = {
-                onEditBlockListClicked()
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = bottomPadding)
-        ) {
-            Text(text = stringResource(id = R.string.action_edit_block))
-        }
-
     }
 }
