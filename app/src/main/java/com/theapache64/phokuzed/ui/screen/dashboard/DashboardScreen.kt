@@ -7,6 +7,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,31 +31,9 @@ private val bottomPadding = 30.dp
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val dynViewState by viewModel.viewState.collectAsState()
     val viewState = dynViewState
-
-    val dynViewAction by viewModel.viewAction.collectAsState(null)
-    val viewAction = dynViewAction
-
-    when (viewAction?.action) {
-        is DashboardViewAction.ShowDurationPicker -> {
-            launchTimePicker(
-                activity = context as FragmentActivity,
-                onTimePicked = { timePicker ->
-                    viewModel.onInteraction(
-                        DashboardInteractor.TimePicked(
-                            timePicker.hour,
-                            timePicker.minute
-                        )
-                    )
-                }
-            )
-        }
-        null -> {
-            // do nothing
-        }
-    }.exhaustive()
+    WatchViewAction(viewModel)
 
 
     Box(
@@ -90,6 +69,37 @@ fun DashboardScreen(
             }
         }.exhaustive()
     }
+}
+
+@Suppress("UnnecessaryVariable")
+@Composable
+private fun WatchViewAction(
+    viewModel: DashboardViewModel
+) {
+    val context = LocalContext.current
+    val dynViewAction by viewModel.viewAction.collectAsState(null)
+    val viewAction = dynViewAction
+
+    when (viewAction?.action) {
+        is DashboardViewAction.ShowDurationPicker -> {
+            LaunchedEffect(key1 = viewAction) {
+                launchTimePicker(
+                    activity = context as FragmentActivity,
+                    onTimePicked = { timePicker ->
+                        viewModel.onInteraction(
+                            DashboardInteractor.TimePicked(
+                                timePicker.hour,
+                                timePicker.minute
+                            )
+                        )
+                    }
+                )
+            }
+        }
+        null -> {
+            // do nothing
+        }
+    }.exhaustive()
 }
 
 fun launchTimePicker(
@@ -146,7 +156,7 @@ fun ActiveUi(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(id = R.string.action_start))
+                Text(text = stringResource(id = R.string.action_add_to_blocklist))
             }
 
             Spacer(modifier = Modifier.height(10.dp))
