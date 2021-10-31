@@ -15,12 +15,17 @@
 **UNDER ACTIVE DEVELOPMENT**
 
 
-## Terminologies
+## 📄 Terminologies
 
-| Terminology | Meaning                          |
-|:------------|:---------------------------------|
-| pRules      | Rules that are added by Phokuzed |
+| Terminology   | Meaning                                     |
+|:--------------|:--------------------------------------------|
+| pRules        | Rules that are added by Phokuzed            |
+| targetSeconds | epoch seconds in future to finish the timer |
 
+## 🤨 FAQ
+
+- Why timer gets current time from a REST API? Why not `System.currentTimeMillis()` ?
+  - To prevent overriding the time
 
 ## ✍️ Author
 

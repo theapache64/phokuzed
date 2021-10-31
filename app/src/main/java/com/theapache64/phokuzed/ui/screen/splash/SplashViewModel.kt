@@ -75,7 +75,7 @@ class SplashViewModel @Inject constructor(
             SplashInteractor.UpdateClick -> {
                 emitViewAction(SplashViewAction.OpenUrl(URL_PLAY_STORE))
             }
-        }.exhaustive
+        }.exhaustive()
     }
 
     var resumeCount = 0

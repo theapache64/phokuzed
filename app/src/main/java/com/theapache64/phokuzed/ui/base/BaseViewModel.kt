@@ -10,7 +10,7 @@ abstract class BaseViewModel<VS, I, VA>(
     defaultViewState: VS
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<VS>(defaultViewState)
+    private val _viewState = MutableStateFlow(defaultViewState)
     val viewState = _viewState.asStateFlow()
 
     private val _viewAction = mutableEventFlow<VA>()

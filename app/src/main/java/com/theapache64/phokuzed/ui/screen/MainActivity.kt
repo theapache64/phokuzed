@@ -5,12 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Surface
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import com.theapache64.phokuzed.ui.theme.PhokuzedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 

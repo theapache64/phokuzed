@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface WorldTimeApi {
     @GET("timezone/Asia/Kolkata")
-    fun getTime(): Flow<Resource<TimeResponse>>
+    suspend fun getTime(): TimeResponse
 }

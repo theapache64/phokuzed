@@ -16,4 +16,5 @@
 package com.theapache64.phokuzed.util
 
 // Workaround for https://youtrack.jetbrains.com/issue/KT-12380
-inline val <T> T.exhaustive get() = this
+@Suppress("unused")
+fun Unit.exhaustive() {}

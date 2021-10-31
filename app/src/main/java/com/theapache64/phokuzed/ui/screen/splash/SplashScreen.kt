@@ -65,7 +65,7 @@ fun SplashScreen(
         null -> {
             // do nothing
         }
-    }.exhaustive
+    }.exhaustive()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -91,7 +91,7 @@ fun SplashScreen(
             SplashViewState.ConfigLoaded -> {
                 // do nothing
             }
-        }.exhaustive
+        }.exhaustive()
     }
 }
 

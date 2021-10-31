@@ -118,4 +118,9 @@ dependencies {
     implementation 'androidx.test.ext:junit-ktx:1.1.4-alpha03'
 
     implementation 'com.hotstar:compass:1.0.0-alpha03'
+
+    // Material Components For Android : Material Components for Android is a static library that you can add to your Android
+	// application in order to use APIs that provide implementations of the Material Design
+	// specification. Compatible on devices running API 14 or later.
+    implementation 'com.google.android.material:material:1.5.0-alpha05'
 }

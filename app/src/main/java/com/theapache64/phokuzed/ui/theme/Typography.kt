@@ -51,11 +51,11 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
     ),
     body1 = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
     ),
     body2 = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.Medium,
     ),
     button = TextStyle(

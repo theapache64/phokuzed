@@ -181,6 +181,20 @@
     "name": "Compose Animation",
     "description": "Compose animation library"
    }
+  },
+  {
+   "id": 15,
+   "type": "implementation",
+   "installed_name": "material",
+   "gpm_dep": {
+    "artifact_id": "material",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.google.android.material/material",
+    "get_from": "Google",
+    "group_id": "com.google.android.material",
+    "name": "Material Components For Android",
+    "description": "Material Components for Android is a static library that you can add to your Android application in order to use APIs that provide implementations of the Material Design specification. Compatible on devices running API 14 or later."
+   }
   }
  ]
 }
