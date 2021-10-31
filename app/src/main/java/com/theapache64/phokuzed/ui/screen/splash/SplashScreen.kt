@@ -40,7 +40,7 @@ fun SplashScreen(
     }
 
     // TODO: Handle update : show update dialog
-    when (viewAction) {
+    when (viewAction?.action) {
         is SplashViewAction.GoToMain -> {
             onSplashFinished()
         }
@@ -55,7 +55,7 @@ fun SplashScreen(
             // TODO: IDK if launching activity from here is a good thing
             // TODO: Refactor
             if (context is Activity) {
-                val urlToOpen = (viewAction as SplashViewAction.OpenUrl).url
+                val urlToOpen = (viewAction?.action as SplashViewAction.OpenUrl).url
                 context.startActivity(
                     Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen))
                 )

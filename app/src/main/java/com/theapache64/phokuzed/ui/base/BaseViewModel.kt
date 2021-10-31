@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+class ViewAction<VA>(
+    val action: VA
+)
+
 abstract class BaseViewModel<VS, I, VA>(
     defaultViewState: VS
 ) : ViewModel() {
@@ -13,7 +17,7 @@ abstract class BaseViewModel<VS, I, VA>(
     private val _viewState = MutableStateFlow(defaultViewState)
     val viewState = _viewState.asStateFlow()
 
-    private val _viewAction = mutableEventFlow<VA>()
+    private val _viewAction = mutableEventFlow<ViewAction<VA>>()
     val viewAction = _viewAction.asSharedFlow()
 
     abstract fun onInteraction(interactor: I)
@@ -22,7 +26,7 @@ abstract class BaseViewModel<VS, I, VA>(
         _viewState.value = viewState
     }
 
-    fun emitViewAction(viewAction: VA) {
-        _viewAction.tryEmit(viewAction)
+    fun emitViewAction(action: VA) {
+        _viewAction.tryEmit(ViewAction(action))
     }
 }

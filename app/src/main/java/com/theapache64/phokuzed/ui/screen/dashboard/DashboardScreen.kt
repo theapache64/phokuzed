@@ -37,7 +37,7 @@ fun DashboardScreen(
     val dynViewAction by viewModel.viewAction.collectAsState(null)
     val viewAction = dynViewAction
 
-    when (viewAction) {
+    when (viewAction?.action) {
         is DashboardViewAction.ShowDurationPicker -> {
             launchTimePicker(
                 activity = context as FragmentActivity,
