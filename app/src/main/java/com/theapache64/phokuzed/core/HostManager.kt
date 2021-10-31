@@ -27,27 +27,33 @@ class HostManager(
         // first remove the existing p-rules
         val freshHostFile =
             if (hostFileContent.contains(COMMENT_BEGIN) && hostFileContent.contains(COMMENT_END)) {
-                val startIndex = hostFileContent.indexOf(COMMENT_BEGIN)
-                val endIndex = hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length
+                val startIndex =
+                    hostFileContent.indexOf(COMMENT_BEGIN) - 1 // -1 because we added \n at the start
+                val endIndex =
+                    hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length + 1 // +1 because we added \n at the end
 
                 hostFileContent.removeRange(startIndex, endIndex)
             } else {
                 hostFileContent
             }
 
-        val newHostContentBuilder = StringBuilder(freshHostFile)
-            .append("\n$COMMENT_BEGIN\n")
+        return if (domainsToBlock.isEmpty()) {
+            freshHostFile
+        } else {
+            val newHostContentBuilder = StringBuilder(freshHostFile)
+                .append("\n$COMMENT_BEGIN\n")
 
-        for (domain in domainsToBlock) {
+            for (domain in domainsToBlock) {
+                newHostContentBuilder
+                    .append("${getV4BlockLine(domain)}\n")
+                    .append("${getV6BlockLine(domain)}\n")
+            }
+
             newHostContentBuilder
-                .append("${getV4BlockLine(domain)}\n")
-                .append("${getV6BlockLine(domain)}\n")
+                .append("$COMMENT_END\n")
+                .trim()
+                .toString()
         }
-
-        return newHostContentBuilder
-            .append("$COMMENT_END\n")
-            .trim()
-            .toString()
     }
 
     private fun getV6BlockLine(domain: String) = "$UNKNOWN_IP_V6 $domain"

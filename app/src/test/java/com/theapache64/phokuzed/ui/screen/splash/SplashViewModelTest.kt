@@ -39,7 +39,7 @@ class SplashViewModelTest {
         val viewModel = SplashViewModel(fakeConfigRepo)
         viewModel.viewAction.test {
             viewModel.init()
-            awaitItem().should.be.instanceof(SplashViewAction.ShowUpdateDialog::class.java)
+            awaitItem().action.should.be.instanceof(SplashViewAction.ShowUpdateDialog::class.java)
         }
     }
 
@@ -55,7 +55,7 @@ class SplashViewModelTest {
         val viewModel = SplashViewModel(fakeConfigRepo)
         viewModel.viewAction.test {
             viewModel.init()
-            awaitItem().should.be.instanceof(SplashViewAction.GoToMain::class.java)
+            awaitItem().action.should.be.instanceof(SplashViewAction.GoToMain::class.java)
         }
     }
 
@@ -70,7 +70,7 @@ class SplashViewModelTest {
         viewModel.viewAction.test {
             viewModel.onResume(mock())
             viewModel.onResume(mock())
-            awaitItem().should.be.instanceof(SplashViewAction.ShowUpdateDialog::class.java)
+            awaitItem().action.should.be.instanceof(SplashViewAction.ShowUpdateDialog::class.java)
         }
     }
 
@@ -79,7 +79,7 @@ class SplashViewModelTest {
         val viewModel = SplashViewModel(mock())
         viewModel.viewAction.test {
             viewModel.onInteraction(SplashInteractor.UpdateClick)
-            awaitItem().should.instanceof(SplashViewAction.OpenUrl::class.java)
+            awaitItem().action.should.instanceof(SplashViewAction.OpenUrl::class.java)
         }
     }
 
