@@ -12,9 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
+import com.theapache64.phokuzed.ui.composable.CenterColumn
 import com.theapache64.phokuzed.ui.screen.dashboard.ActiveDashboardUi
 import com.theapache64.phokuzed.util.exhaustive
 
@@ -57,11 +59,22 @@ fun BlockListScreen(
                     }
                 )
             }
-            BlockListViewState.BlockListEmpty -> TODO()
+            BlockListViewState.BlockListEmpty -> {
+                EmptyUi()
+            }
         }.exhaustive()
     }
 }
 
+@Composable
+fun EmptyUi() {
+    CenterBox {
+        CenterColumn {
+            Text(text = "📭", fontSize = 50.sp)
+            Text(text = "You have no domains!")
+        }
+    }
+}
 
 
 @Composable

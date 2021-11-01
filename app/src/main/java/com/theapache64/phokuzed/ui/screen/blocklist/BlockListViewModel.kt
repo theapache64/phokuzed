@@ -17,11 +17,15 @@ class BlockListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val blockList = blockListRepo.getBlockList()
-            if (blockList.isEmpty()) {
-                emitViewState(BlockListViewState.BlockListEmpty)
-            } else {
-                emitViewState(BlockListViewState.Active(blockList))
-            }
+            onBlockListUpdated(blockList)
+        }
+    }
+
+    private fun onBlockListUpdated(blockList: Set<String>) {
+        if (blockList.isEmpty()) {
+            emitViewState(BlockListViewState.BlockListEmpty)
+        } else {
+            emitViewState(BlockListViewState.Active(blockList))
         }
     }
 
@@ -39,9 +43,7 @@ class BlockListViewModel @Inject constructor(
                 remove(domain)
             }.let { newBlockList ->
                 blockListRepo.saveBlockList(newBlockList)
-
-                // emit the updated state
-                emitViewState(BlockListViewState.Active(newBlockList))
+                onBlockListUpdated(newBlockList)
             }
         }
     }

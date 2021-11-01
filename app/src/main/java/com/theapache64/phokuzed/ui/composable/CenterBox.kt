@@ -10,9 +10,12 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CenterBox(
+    modifier : Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Surface {
+    Surface(
+        modifier = modifier
+    ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
