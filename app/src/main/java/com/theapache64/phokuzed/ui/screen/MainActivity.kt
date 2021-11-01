@@ -24,14 +24,14 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: Splash still slow? check release build also
-        /*setContent {
+        setContent {
             val navController = rememberNavController()
             PhokuzedTheme {
                 Surface {
                     AppNavigation(navController)
                 }
             }
-        }*/
+        }
 
         Thread {
             /*val hostFile = File("/system/etc/hosts").canonicalFile

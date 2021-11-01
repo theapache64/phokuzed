@@ -1,9 +1,12 @@
 package com.theapache64.phokuzed.core
 
+import com.theapache64.phokuzed.util.isSuccessOrLog
 import com.topjohnwu.superuser.Shell
+import com.topjohnwu.superuser.internal.MainShell
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import okhttp3.internal.closeQuietly
 
 /**
  * This class is an enum to define mount type.
@@ -32,20 +35,20 @@ enum class MountType(
 object RootUtils {
 
     suspend fun hasRootAccess(): Boolean = withContext(Dispatchers.IO) {
-        Shell.rootAccess()
+        val shell = Shell.getShell()
+        val isRooted = shell.isRoot
+        shell.closeQuietly()
+        isRooted
     }
 
-    suspend fun remountSystemPartition(mountType: MountType): Boolean =
+    suspend fun remountSystemPartition(mountType: MountType): Unit =
         withContext(Dispatchers.IO) {
             val result = Shell.su(
                 "mount -o ${mountType.option},remount /system"
             ).exec()
 
-            result.isSuccess.also { success ->
-                if (!success) {
-                    val error = result.err.joinToString(separator = "\n")
-                    Timber.e("remountSystemPartition: Remounting failed. Caused by '$error'")
-                }
-            }
+            result.isSuccessOrLog(msg = "remountSystemPartition: Remounting failed")
         }
+
+
 }

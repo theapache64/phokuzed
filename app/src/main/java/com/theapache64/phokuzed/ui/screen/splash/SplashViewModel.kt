@@ -4,7 +4,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.BuildConfig
-import com.theapache64.phokuzed.core.RootChecker
 import com.theapache64.phokuzed.core.RootUtils
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
@@ -104,8 +103,12 @@ class SplashViewModel @Inject constructor(
 
     var resumeCount = 0
 
-    override fun onResume(owner: LifecycleOwner) {
+    /*override fun onResume(owner: LifecycleOwner) {
         Timber.d("onResume: Hit it ")
+
+    }*/
+
+    override fun onStart(owner: LifecycleOwner) {
         resumeCount++
         if (resumeCount > 1) {
             // After every resume, do version check

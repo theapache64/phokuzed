@@ -1,15 +1,20 @@
 package com.theapache64.phokuzed.data.repo
 
 import android.content.SharedPreferences
+import com.theapache64.phokuzed.core.MountType
+import com.theapache64.phokuzed.core.RootUtils
+import com.theapache64.phokuzed.util.isSuccessOrLog
+import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.DataOutputStream
 import java.io.File
 import javax.inject.Inject
 
 interface HostRepo {
     fun getBlockList(): Set<String>
-    fun writeHostFileContent(content: String)
-    fun readHostFileContent(): String
+    suspend fun writeHostFileContent(content: String): Boolean
+    suspend fun readHostFileContent(): String
 
 }
 
@@ -25,29 +30,23 @@ class HostRepoImpl @Inject constructor(
     }
 
 
-    override fun readHostFileContent(): String {
+    override suspend fun readHostFileContent(): String {
+        // TODO : Use su here
         return File("/etc/hosts").readText()
     }
 
 
-    override fun writeHostFileContent(content: String) {
-        //File("/etc/hosts").writeText(content)
-        Timber.d("writeHostFileContent: Content is '$content'")
-        Runtime.getRuntime().exec("su").let { process ->
-            val os = DataOutputStream(process.outputStream)
-            /*os.bufferedWriter().use {
-                it.write()
-                it.write("exit\n")
-            }*/
-            os.writeBytes("echo \"$content\" >/etc/hosts\n")
-            os.writeBytes("exit\n")
-            os.flush()
+    override suspend fun writeHostFileContent(content: String): Boolean =
+        withContext(Dispatchers.IO) {
+            Timber.d("writeHostFileContent: Content is '$content'")
 
-            process.waitFor()
-            process.exitValue()
-                .also { Timber.d("writeHostFileContent: The exit value is $it") } == 1
+            RootUtils.remountSystemPartition(MountType.READ_WRITE)
+            val result = Shell.su(
+                "echo \"$content\" >/system/etc/hosts"
+            ).exec()
+
+            result.isSuccessOrLog(
+                msg = "writeHostFileContent: Failed to modify hosts file"
+            )
         }
-    }
-
-
 }
