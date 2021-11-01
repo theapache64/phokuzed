@@ -7,7 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -71,13 +74,15 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_logo),
-            contentDescription = stringResource(id = R.string.cd_app_logo),
-            modifier = Modifier
-                .size(100.dp)
-                .align(Alignment.Center),
-        )
+        if(viewState !is SplashViewState.NoRootAccess){
+            Image(
+                painter = painterResource(id = R.drawable.ic_logo),
+                contentDescription = stringResource(id = R.string.cd_app_logo),
+                modifier = Modifier
+                    .size(100.dp)
+                    .align(Alignment.Center),
+            )
+        }
 
         when (viewState) {
             SplashViewState.ConfigLoading -> {
@@ -91,7 +96,34 @@ fun SplashScreen(
             SplashViewState.ConfigLoaded -> {
                 // do nothing
             }
+            SplashViewState.NoRootAccess -> {
+                NoRootAccessUi(
+                    onRetryClicked = {
+                        viewModel.onInteraction(SplashInteractor.RetryRootCheckClick)
+                    }
+                )
+            }
         }.exhaustive()
+    }
+}
+
+@Composable
+fun BoxScope.NoRootAccessUi(
+    onRetryClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier.align(Alignment.Center),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Text
+        Text(text = stringResource(id = R.string.splash_no_root))
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Retry button
+        Button(onClick = onRetryClicked) {
+            Text(text = stringResource(id = R.string.action_retry))
+        }
     }
 }
 

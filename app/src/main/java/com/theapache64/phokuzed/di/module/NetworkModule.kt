@@ -11,8 +11,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
+import kotlin.time.ExperimentalTime
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,10 +55,20 @@ class NetworkModule {
             .create(Api::class.java)
     }
 
+    @OptIn(ExperimentalTime::class)
     @Provides
     fun provideWorldTimeApi(moshi: Moshi): WorldTimeApi {
+        // TODO: Refactor
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .readTimeout(kotlin.time.Duration.seconds(60).inWholeSeconds, TimeUnit.SECONDS)
+            .build()
+
         return Retrofit.Builder()
-            .baseUrl("https://worldtimeapi.org/api/")
+            // .client(okHttpClient)
+            .baseUrl("http://worldtimeapi.org/api/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(FlowResourceCallAdapterFactory())
             .build()

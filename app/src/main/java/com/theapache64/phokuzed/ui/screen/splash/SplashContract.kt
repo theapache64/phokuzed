@@ -5,12 +5,13 @@ sealed class SplashViewState {
     object ConfigLoading : SplashViewState()
     object ConfigLoaded : SplashViewState()
     data class ConfigError(val message: String) : SplashViewState()
-
+    object NoRootAccess : SplashViewState()
 }
 
 // Interactors (UI to ViewModel)
 sealed class SplashInteractor {
     object UpdateClick : SplashInteractor()
+    object RetryRootCheckClick : SplashInteractor()
 }
 
 // ViewAction (ViewModel to UI - to notify one-time events)

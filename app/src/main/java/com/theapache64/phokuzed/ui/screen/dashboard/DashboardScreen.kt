@@ -66,6 +66,12 @@ fun DashboardScreen(
                     }
                 )
             }
+            is DashboardViewState.Error -> {
+                // TODO: Improve the UI
+                CenterBox {
+                    Text(text = viewState.reason)
+                }
+            }
         }.exhaustive()
     }
 }

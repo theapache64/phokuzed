@@ -11,7 +11,7 @@ import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 fun AppNavigation(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
 
         // Splash
         composable(Screen.Splash.route) {

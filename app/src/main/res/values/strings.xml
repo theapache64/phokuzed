@@ -11,4 +11,7 @@
     <string name="action_edit_block">EDIT BLOCKLIST</string>
     <string name="dashboard_calculating_time">Calculating time...</string>
     <string name="action_add_to_blocklist">ADD TO BLOCKLIST</string>
+    <string name="action_retry">RETRY</string>
+    <string name="splash_no_root">Uh ho! It looks like there\'s no root access 😢</string>
+    <string name="dashboard_writing_rules">Writing rules...</string>
 </resources>

@@ -195,6 +195,48 @@
     "name": "Material Components For Android",
     "description": "Material Components for Android is a static library that you can add to your Android application in order to use APIs that provide implementations of the Material Design specification. Compatible on devices running API 14 or later."
    }
+  },
+  {
+   "id": 16,
+   "type": "implementation",
+   "installed_name": "interceptor okhttp",
+   "gpm_dep": {
+    "artifact_id": "logging-interceptor",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor",
+    "get_from": "Central",
+    "group_id": "com.squareup.okhttp3",
+    "name": "OkHttp Logging Interceptor",
+    "description": "Square’s meticulous HTTP client for Java and Kotlin."
+   }
+  },
+  {
+   "id": 17,
+   "type": "implementation",
+   "installed_name": "libsuperuser",
+   "gpm_dep": {
+    "artifact_id": "libsuperuser",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/eu.chainfire/libsuperuser",
+    "get_from": "Spring Plugins",
+    "group_id": "eu.chainfire",
+    "name": "Libsuperuser",
+    "description": "Libsuperuser"
+   }
+  },
+  {
+   "id": 18,
+   "type": "implementation",
+   "installed_name": "libsu",
+   "gpm_dep": {
+    "artifact_id": "core",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.github.topjohnwu.libsu/core",
+    "get_from": "Mulesoft",
+    "group_id": "com.github.topjohnwu.libsu",
+    "name": "Topjohnwu/libsu",
+    "description": "A complete solution for apps using root permissions"
+   }
   }
  ]
 }

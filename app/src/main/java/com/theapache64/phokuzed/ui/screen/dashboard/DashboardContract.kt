@@ -7,6 +7,7 @@ sealed class DashboardViewState {
     object Idle : DashboardViewState()
     data class Loading(@StringRes val message: Int) : DashboardViewState()
     data class Active(val targetSeconds: Long) : DashboardViewState()
+    data class Error(val reason  :String) : DashboardViewState()
 }
 
 // Interactors (UI to ViewModel)

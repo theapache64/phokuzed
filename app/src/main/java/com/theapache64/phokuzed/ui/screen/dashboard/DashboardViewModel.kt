@@ -2,6 +2,8 @@ package com.theapache64.phokuzed.ui.screen.dashboard
 
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.R
+import com.theapache64.phokuzed.core.HostManager
+import com.theapache64.phokuzed.data.repo.HostRepo
 import com.theapache64.phokuzed.data.repo.TimeRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.exhaustive
@@ -14,7 +16,8 @@ import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val timeRepo: TimeRepo
+    private val timeRepo: TimeRepo,
+    private val hostRepo: HostRepo
 ) :
     BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
         defaultViewState = DashboardViewState.Idle
@@ -63,10 +66,23 @@ class DashboardViewModel @Inject constructor(
                     timeRepo.getCurrentTimeInSeconds() + hoursInSeconds + minutesInSeconds
                 timeRepo.saveTargetSeconds(targetSeconds)
 
+                emitViewState(DashboardViewState.Loading(R.string.dashboard_writing_rules))
+                // get block list - list of domains
+                val blockList = setOf("facebook.com") // hostRepo.getBlockList()
+
+                // get host file content - list of domains and ips
+                val hostFileContent = hostRepo.readHostFileContent()
+
+                // install the blocklist inside the host file content
+                val newHostFileContent = HostManager(hostFileContent).apply(blockList)
+
+                // update the host file with new content
+                hostRepo.writeHostFileContent(newHostFileContent)
+
                 emitViewState(DashboardViewState.Active(targetSeconds))
             } catch (e: IOException) {
                 e.printStackTrace()
-                TODO("throw time error")
+                emitViewState(DashboardViewState.Error(e.message ?: "Something went wrong"))
             }
         }
     }

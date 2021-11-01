@@ -1,7 +1,11 @@
 package com.theapache64.phokuzed.ui.screen.splash
 
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.BuildConfig
+import com.theapache64.phokuzed.core.RootChecker
+import com.theapache64.phokuzed.core.RootUtils
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
@@ -46,7 +50,9 @@ class SplashViewModel @Inject constructor(
                         val config = it.data
                         // Saving new config
                         configRepo.saveRemoteConfig(config)
-                        performVersionCheck(config)
+                        performVersionCheck(config) {
+                            performRootCheck()
+                        }
                     }
                     is Resource.Error -> {
                         emitViewState(SplashViewState.ConfigError(it.errorData))
@@ -56,7 +62,22 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    private fun performVersionCheck(config: Config) {
+    private fun performRootCheck(onRootAccess: () -> Unit) {
+        viewModelScope.launch {
+            if(RootUtils.hasRootAccess()){
+                Timber.d("performRootCheck: yey got root")
+                onRootAccess()
+            }else{
+                Timber.e("performRootCheck: uh ho no root")
+                emitViewState(SplashViewState.NoRootAccess)
+            }
+        }
+    }
+
+    private fun performVersionCheck(
+        config: Config,
+        onValidVersion: () -> Unit
+    ) {
         // Version check
         val currentVersionCode = BuildConfig.VERSION_CODE
         val mandatoryVersionCode = config.mandatoryVersionCode
@@ -65,7 +86,7 @@ class SplashViewModel @Inject constructor(
             // need to update
             emitViewAction(SplashViewAction.ShowUpdateDialog)
         } else {
-            emitViewAction(SplashViewAction.GoToMain)
+            onValidVersion()
         }
     }
 
@@ -74,6 +95,9 @@ class SplashViewModel @Inject constructor(
         when (interactor) {
             SplashInteractor.UpdateClick -> {
                 emitViewAction(SplashViewAction.OpenUrl(URL_PLAY_STORE))
+            }
+            SplashInteractor.RetryRootCheckClick -> {
+                performRootCheck()
             }
         }.exhaustive()
     }
@@ -87,8 +111,16 @@ class SplashViewModel @Inject constructor(
             // After every resume, do version check
             viewModelScope.launch {
                 val config = configRepo.getLocalConfig()
-                performVersionCheck(config)
+                performVersionCheck(config) {
+                    performRootCheck()
+                }
             }
+        }
+    }
+
+    private fun performRootCheck() {
+        performRootCheck {
+            emitViewAction(SplashViewAction.GoToMain)
         }
     }
 }
