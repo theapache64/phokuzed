@@ -12,7 +12,7 @@ import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.timer.CountDownTimer
 
 @Composable
-fun ActiveUi(
+fun ActiveDashboardUi(
     targetSeconds: Long,
     onAddToBlocklistClicked: () -> Unit,
     onExtendBlockTimerClicked: () -> Unit,

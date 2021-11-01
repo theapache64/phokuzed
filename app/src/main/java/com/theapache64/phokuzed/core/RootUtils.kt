@@ -2,9 +2,7 @@ package com.theapache64.phokuzed.core
 
 import com.theapache64.phokuzed.util.isSuccessOrLog
 import com.topjohnwu.superuser.Shell
-import com.topjohnwu.superuser.internal.MainShell
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
 
@@ -13,7 +11,7 @@ import okhttp3.internal.closeQuietly
  *
  * @author Bruce BUJON (bruce.bujon(at)gmail(dot)com)
  */
-enum class MountType(
+private enum class MountType(
     /**
      * Get related command line option.
      * @return The related command line option.
@@ -41,14 +39,28 @@ object RootUtils {
         isRooted
     }
 
-    suspend fun remountSystemPartition(mountType: MountType): Unit =
-        withContext(Dispatchers.IO) {
-            val result = Shell.su(
-                "mount -o ${mountType.option},remount /system"
+    suspend fun remountSystemPartition(
+        block: () -> Unit
+    ): Boolean = withContext(Dispatchers.IO) {
+        // remounting to read-write
+        val readWriteResult = Shell.su(
+            "mount -o ${MountType.READ_WRITE.option},remount /system"
+        ).exec()
+
+        val isReadWriteable =
+            readWriteResult.isSuccessOrLog(msg = "remountSystemPartition: Remounting failed")
+        if (isReadWriteable) {
+            block()
+            // remounting to read only
+            val readResult = Shell.su(
+                "mount -o ${MountType.READ_ONLY.option},remount /system"
             ).exec()
 
-            result.isSuccessOrLog(msg = "remountSystemPartition: Remounting failed")
+            readResult.isSuccessOrLog(msg = "Failed to mount back to read only")
+        } else {
+            false
         }
+    }
 
 
 }

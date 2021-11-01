@@ -6,15 +6,8 @@ import androidx.activity.viewModels
 import androidx.compose.material.Surface
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
-import com.theapache64.phokuzed.core.MountType
-import com.theapache64.phokuzed.core.RootUtils
-import com.theapache64.phokuzed.core.RootUtils.remountSystemPartition
 import com.theapache64.phokuzed.ui.theme.PhokuzedTheme
-import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import java.io.File
-import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {

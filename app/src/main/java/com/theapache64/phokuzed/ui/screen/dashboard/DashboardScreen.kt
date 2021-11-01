@@ -3,14 +3,11 @@ package com.theapache64.phokuzed.ui.screen.dashboard
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,9 +16,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
-import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
-import com.theapache64.phokuzed.ui.composable.timer.CountDownTimer
 import com.theapache64.phokuzed.util.exhaustive
 
 val bottomPadding = 30.dp
@@ -53,7 +48,7 @@ fun DashboardScreen(
                 CalculatingUi(viewState.message)
             }
             is DashboardViewState.Active -> {
-                ActiveUi(
+                ActiveDashboardUi(
                     targetSeconds = viewState.targetSeconds,
                     onAddToBlocklistClicked = {
                         viewModel.onInteraction(DashboardInteractor.AddToBlockListClicked)

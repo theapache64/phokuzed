@@ -14,4 +14,7 @@
     <string name="action_retry">RETRY</string>
     <string name="splash_no_root">Uh ho! It looks like there\'s no root access 😢</string>
     <string name="dashboard_writing_rules">Writing rules...</string>
+    <string name="block_list_loading">Loading block list...</string>
+    <string name="block_list_title">Block List</string>
+    <string name="block_list_cd_remove_domain">remove domain</string>
 </resources>

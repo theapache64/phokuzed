@@ -12,4 +12,5 @@ abstract class RepoModule {
     @Binds abstract fun bindConfigRepo(repoImpl: ConfigRepoImpl): ConfigRepo
     @Binds abstract fun bindTimeRepo(repoImpl: TimeRepoImpl): TimeRepo
     @Binds abstract fun bindHostRepo(repoImpl: HostRepoImpl): HostRepo
+    @Binds abstract fun bindBlockListRepo(repoImpl: BlockListRepoImpl): BlockListRepo
 }

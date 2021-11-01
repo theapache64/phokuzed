@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.theapache64.phokuzed.ui.screen.blocklist.BlockListScreen
 import com.theapache64.phokuzed.ui.screen.dashboard.DashboardScreen
 import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 
@@ -11,7 +12,7 @@ import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 fun AppNavigation(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+    NavHost(navController = navController, startDestination = Screen.BlockList.route) {
 
         // Splash
         composable(Screen.Splash.route) {
@@ -30,6 +31,11 @@ fun AppNavigation(
         // Dashboard
         composable(Screen.Dashboard.route) {
             DashboardScreen()
+        }
+
+        // Blocklist
+        composable(Screen.BlockList.route) {
+            BlockListScreen(onBackPressed = { navController.popBackStack() })
         }
     }
 }
