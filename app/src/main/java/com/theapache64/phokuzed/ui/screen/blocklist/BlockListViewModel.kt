@@ -47,7 +47,23 @@ class BlockListViewModel @Inject constructor(
             is BlockListInteractor.RemoveDomainClick -> {
                 onRemoveDomainClicked(interactor.domain)
             }
+            BlockListInteractor.AddClick -> {
+                onAddClicked()
+            }
+            is BlockListInteractor.AddDomainClick -> {
+                onAddDomainClick(interactor.domain)
+            }
         }.exhaustive()
+    }
+
+    private fun onAddDomainClick(domain: String) {
+        // TODO: Input validation
+
+        emitViewAction(BlockListViewAction.DismissAddDialog)
+    }
+
+    private fun onAddClicked() {
+        emitViewAction(BlockListViewAction.ShowAddDialog)
     }
 
     private fun onRemoveDomainClicked(domain: String) {

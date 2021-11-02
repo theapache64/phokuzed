@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.composable.CenterColumn
-import com.theapache64.phokuzed.ui.screen.dashboard.ActiveDashboardUi
 import com.theapache64.phokuzed.util.exhaustive
 
 @Suppress("UnnecessaryVariable")
@@ -29,6 +27,55 @@ fun BlockListScreen(
     val dynViewState by viewModel.viewState.collectAsState()
     val viewState = dynViewState
 
+    val dynViewAction by viewModel.viewAction.collectAsState(initial = null)
+    val viewAction = dynViewAction?.action
+
+    var isShowAddDialog by remember { mutableStateOf(false) }
+    var newDomain by remember { mutableStateOf("") } // TODO: move to viewModel?
+
+    LaunchedEffect(viewAction) {
+        when (viewAction) {
+            BlockListViewAction.ShowAddDialog -> {
+                isShowAddDialog = true
+            }
+            // TODO: To dismiss the dialog
+            BlockListViewAction.DismissAddDialog -> {
+                isShowAddDialog = false
+            }
+
+            null -> {
+                // do nothing
+            }
+
+        }.exhaustive()
+    }
+
+    if (isShowAddDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                isShowAddDialog = false
+            },
+            title = {
+                Text(text = stringResource(id = R.string.block_list_add_dialog_title))
+            },
+            text = {
+                OutlinedTextField(
+                    value = newDomain,
+                    onValueChange = {
+                        newDomain = it
+                    }
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.onInteraction(BlockListInteractor.AddDomainClick(newDomain))
+                }) {
+                    Text(text = stringResource(id = R.string.action_add))
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,7 +86,20 @@ fun BlockListScreen(
                     IconButton(onClick = {
                         onBackPressed()
                     }) {
-                        Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "back button")
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            contentDescription = "back button"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.onInteraction(BlockListInteractor.AddClick)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = stringResource(id = R.string.cd_add_to_blocklist)
+                        )
                     }
                 }
             )

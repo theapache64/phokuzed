@@ -13,10 +13,13 @@ sealed class BlockListViewState {
 
 // Interactors (UI to ViewModel)
 sealed class BlockListInteractor {
+    object AddClick : BlockListInteractor()
     data class RemoveDomainClick(val domain: String) : BlockListInteractor()
+    data class AddDomainClick(val domain: String) : BlockListInteractor()
 }
 
 // ViewAction (ViewModel to UI - to notify one-time events)
 sealed class BlockListViewAction {
-
+    object ShowAddDialog : BlockListViewAction()
+    object DismissAddDialog : BlockListViewAction()
 }

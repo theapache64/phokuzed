@@ -18,4 +18,7 @@
     <string name="block_list_title">Block List</string>
     <string name="block_list_cd_remove_domain">remove domain</string>
     <string name="action_extend_timer">EXTEND TIMER</string>
+    <string name="cd_add_to_blocklist">add to blocklist</string>
+    <string name="block_list_add_dialog_title">Add new domain</string>
+    <string name="action_add">ADD</string>
 </resources>

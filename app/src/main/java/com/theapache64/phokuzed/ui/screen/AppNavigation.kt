@@ -15,7 +15,7 @@ import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 fun AppNavigation(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
+    NavHost(navController = navController, startDestination = Screen.BlockList.route) {
 
         // Splash
         composable(Screen.Splash.route) {
@@ -50,6 +50,7 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument(BlockListViewModel.ARG_SHOULD_ENABLE_REMOVE) {
                     type = NavType.BoolType
+                    defaultValue = false
                 }
             )
         ) {

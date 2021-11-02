@@ -86,31 +86,32 @@ private fun WatchViewAction(
     val dynViewAction by viewModel.viewAction.collectAsState(null)
     val viewAction = dynViewAction?.action
 
-    when (viewAction) {
-        is DashboardViewAction.ShowDurationPicker -> {
-            LaunchedEffect(key1 = viewAction) {
+    LaunchedEffect(viewAction) {
+        when (viewAction) {
+            is DashboardViewAction.ShowDurationPicker -> {
+
                 launchTimePicker(
                     activity = context as FragmentActivity,
                     onTimePicked = { timePicker ->
                         viewModel.onInteraction(
-                            DashboardInteractor.TimePicked(
+                            DashboardInteractor.TimePicked(s
                                 timePicker.hour,
                                 timePicker.minute
                             )
                         )
                     }
                 )
-            }
-        }
-        is DashboardViewAction.GoToBlockList -> {
-            val shouldEnableRemove = viewAction.shouldEnableRemove
-            onEditBlockListClicked.invoke(shouldEnableRemove)
-        }
 
-        null -> {
-            // do nothing
-        }
-    }.exhaustive()
+            }
+            is DashboardViewAction.GoToBlockList -> {
+                val shouldEnableRemove = viewAction.shouldEnableRemove
+                onEditBlockListClicked.invoke(shouldEnableRemove)
+            }
+            null -> {
+                // do nothing
+            }
+        }.exhaustive()
+    }
 }
 
 fun launchTimePicker(
