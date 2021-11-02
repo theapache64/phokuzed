@@ -4,7 +4,8 @@ package com.theapache64.phokuzed.ui.screen.blocklist
 sealed class BlockListViewState {
     object Loading : BlockListViewState()
     data class Active(
-        val blockList: Set<String>
+        val blockList: Set<String>,
+        val shouldEnableRemove : Boolean
     ) : BlockListViewState()
 
     object BlockListEmpty : BlockListViewState()

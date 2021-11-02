@@ -2,7 +2,8 @@
 package com.theapache64.phokuzed.ui.screen.dashboard
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,11 +25,15 @@ val bottomPadding = 30.dp
 @Suppress("UnnecessaryVariable")
 @Composable
 fun DashboardScreen(
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
+    onEditBlockListClicked: (shouldEnableRemove: Boolean) -> Unit
 ) {
     val dynViewState by viewModel.viewState.collectAsState()
     val viewState = dynViewState
-    WatchViewAction(viewModel)
+    WatchViewAction(
+        viewModel = viewModel,
+        onEditBlockListClicked = onEditBlockListClicked
+    )
 
     Box(
         modifier = Modifier.padding(10.dp)
@@ -74,13 +79,14 @@ fun DashboardScreen(
 @Suppress("UnnecessaryVariable")
 @Composable
 private fun WatchViewAction(
-    viewModel: DashboardViewModel
+    viewModel: DashboardViewModel,
+    onEditBlockListClicked: (shouldEnableRemove: Boolean) -> Unit
 ) {
     val context = LocalContext.current
     val dynViewAction by viewModel.viewAction.collectAsState(null)
-    val viewAction = dynViewAction
+    val viewAction = dynViewAction?.action
 
-    when (viewAction?.action) {
+    when (viewAction) {
         is DashboardViewAction.ShowDurationPicker -> {
             LaunchedEffect(key1 = viewAction) {
                 launchTimePicker(
@@ -96,6 +102,11 @@ private fun WatchViewAction(
                 )
             }
         }
+        is DashboardViewAction.GoToBlockList -> {
+            val shouldEnableRemove = viewAction.shouldEnableRemove
+            onEditBlockListClicked.invoke(shouldEnableRemove)
+        }
+
         null -> {
             // do nothing
         }

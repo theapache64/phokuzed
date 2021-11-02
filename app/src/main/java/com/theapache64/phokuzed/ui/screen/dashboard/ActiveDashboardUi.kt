@@ -46,6 +46,8 @@ fun ActiveDashboardUi(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            /*
+            // TODO: v2
             Button(
                 onClick = {
                     onExtendBlockTimerClicked()
@@ -53,8 +55,8 @@ fun ActiveDashboardUi(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(text = stringResource(id = R.string.action_edit_block))
-            }
+                Text(text = stringResource(id = R.string.action_extend_timer))
+            }*/
         }
 
     }

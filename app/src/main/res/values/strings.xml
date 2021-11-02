@@ -17,4 +17,5 @@
     <string name="block_list_loading">Loading block list...</string>
     <string name="block_list_title">Block List</string>
     <string name="block_list_cd_remove_domain">remove domain</string>
+    <string name="action_extend_timer">EXTEND TIMER</string>
 </resources>

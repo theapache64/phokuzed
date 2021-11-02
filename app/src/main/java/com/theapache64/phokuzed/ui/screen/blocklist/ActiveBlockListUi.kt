@@ -1,9 +1,6 @@
 package com.theapache64.phokuzed.ui.screen.blocklist
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -28,6 +25,7 @@ fun ActiveBlockListUi(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(50.dp)
                         .padding(horizontal = 10.dp)
                     ,
                     verticalAlignment = CenterVertically,
@@ -37,13 +35,15 @@ fun ActiveBlockListUi(
                         text = domain
                     )
 
-                    IconButton(
-                        onClick = { onRemoveDomainClicked.invoke(domain) },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = stringResource(id = R.string.block_list_cd_remove_domain)
-                        )
+                    if(activeState.shouldEnableRemove){
+                        IconButton(
+                            onClick = { onRemoveDomainClicked.invoke(domain) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Close,
+                                contentDescription = stringResource(id = R.string.block_list_cd_remove_domain)
+                            )
+                        }
                     }
                 }
             }

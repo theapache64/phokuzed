@@ -36,10 +36,10 @@ class DashboardViewModel @Inject constructor(
     override fun onInteraction(interactor: DashboardInteractor) {
         when (interactor) {
             DashboardInteractor.AddToBlockListClicked -> {
-                TODO()
+                onAddToBlockListClicked()
             }
             DashboardInteractor.EditBlockListClicked -> {
-                TODO()
+                onEditBlockListClicked()
             }
             DashboardInteractor.ExtendBlockTimerClicked -> {
                 TODO()
@@ -54,6 +54,14 @@ class DashboardViewModel @Inject constructor(
                 onTimePicked(interactor)
             }
         }.exhaustive()
+    }
+
+    private fun onAddToBlockListClicked() {
+        emitViewAction(DashboardViewAction.GoToBlockList(shouldEnableRemove = false))
+    }
+
+    private fun onEditBlockListClicked() {
+        emitViewAction(DashboardViewAction.GoToBlockList(shouldEnableRemove = true))
     }
 
     @OptIn(ExperimentalTime::class)
