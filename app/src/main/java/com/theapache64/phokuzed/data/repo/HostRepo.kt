@@ -11,20 +11,20 @@ import javax.inject.Inject
 
 interface HostRepo {
 
-    suspend fun writeHostFileContent(content: String): Boolean
-    suspend fun readHostFileContent(): String
+    suspend fun updateHostFileContent(content: String): Boolean
+    suspend fun getHostFileContent(): String
 
 }
 
 class HostRepoImpl @Inject constructor() : HostRepo {
 
-    override suspend fun readHostFileContent(): String {
+    override suspend fun getHostFileContent(): String {
         // TODO : Use su here
         return File("/etc/hosts").readText()
     }
 
 
-    override suspend fun writeHostFileContent(content: String): Boolean =
+    override suspend fun updateHostFileContent(content: String): Boolean =
         withContext(Dispatchers.IO) {
             Timber.d("writeHostFileContent: Content is '$content'")
 

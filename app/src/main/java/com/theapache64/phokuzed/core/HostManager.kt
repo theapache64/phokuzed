@@ -23,20 +23,26 @@ class HostManager(
         const val UNKNOWN_IP_V6 = "::"
     }
 
+    fun removeRules(): String {
+        return if (hostFileContent.contains(COMMENT_BEGIN) && hostFileContent.contains(COMMENT_END)) {
+            val startIndex =
+                hostFileContent.indexOf(COMMENT_BEGIN) - 1 // -1 because we added \n at the start
+            val endIndex =
+                hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length + 1 // +1 because we added \n at the end
+
+            hostFileContent.removeRange(startIndex, endIndex)
+        } else {
+            hostFileContent
+        }
+    }
+
     fun apply(domainsToBlock: Set<String>): String {
+        if (domainsToBlock.isEmpty()) {
+            error("domainSet can't be empty")
+        }
+
         // first remove the existing p-rules
-        val freshHostFile =
-            if (hostFileContent.contains(COMMENT_BEGIN) && hostFileContent.contains(COMMENT_END)) {
-                val startIndex =
-                    hostFileContent.indexOf(COMMENT_BEGIN) - 1 // -1 because we added \n at the start
-                val endIndex =
-                    hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length + 1 // +1 because we added \n at the end
-
-                hostFileContent.removeRange(startIndex, endIndex)
-            } else {
-                hostFileContent
-            }
-
+        val freshHostFile = removeRules()
         return if (domainsToBlock.isEmpty()) {
             freshHostFile
         } else {

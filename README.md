@@ -64,7 +64,6 @@ Give a ⭐️ if this project helped you!
 ## 🙇🏻 Credits
 
 - Inspired by [SelfControlApp](https://github.com/SelfControlApp/selfcontrol). Thanks to [cstigler](https://github.com/cstigler) for maintaining such an amazing tool.
-- 
 
 ## 📝 License
 

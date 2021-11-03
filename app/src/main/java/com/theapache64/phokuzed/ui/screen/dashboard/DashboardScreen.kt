@@ -94,7 +94,7 @@ private fun WatchViewAction(
                     activity = context as FragmentActivity,
                     onTimePicked = { timePicker ->
                         viewModel.onInteraction(
-                            DashboardInteractor.TimePicked(s
+                            DashboardInteractor.TimePicked(
                                 timePicker.hour,
                                 timePicker.minute
                             )

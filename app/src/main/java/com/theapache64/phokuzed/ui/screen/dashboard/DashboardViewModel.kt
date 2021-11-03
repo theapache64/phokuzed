@@ -48,12 +48,23 @@ class DashboardViewModel @Inject constructor(
                 emitViewAction(DashboardViewAction.ShowDurationPicker)
             }
             DashboardInteractor.TimerFinished -> {
-                TODO()
+                onTimerFinished()
             }
             is DashboardInteractor.TimePicked -> {
                 onTimePicked(interactor)
             }
         }.exhaustive()
+    }
+
+    private fun onTimerFinished() {
+        viewModelScope.launch {
+            // modify the host file
+            val currentHostFileContent = hostRepo.getHostFileContent()
+            val newHostFileContent = HostManager(currentHostFileContent).removeRules()
+            hostRepo.updateHostFileContent(newHostFileContent)
+            // change the state to idle
+            emitViewState(DashboardViewState.Idle)
+        }
     }
 
     private fun onAddToBlockListClicked() {
@@ -81,13 +92,13 @@ class DashboardViewModel @Inject constructor(
                 val blockList = blockListRepo.getBlockList()
 
                 // get host file content - list of domains and ips
-                val hostFileContent = hostRepo.readHostFileContent()
+                val hostFileContent = hostRepo.getHostFileContent()
 
                 // install the blocklist inside the host file content
                 val newHostFileContent = HostManager(hostFileContent).apply(blockList)
 
                 // update the host file with new content
-                hostRepo.writeHostFileContent(newHostFileContent)
+                hostRepo.updateHostFileContent(newHostFileContent)
 
                 emitViewState(DashboardViewState.Active(targetSeconds))
             } catch (e: IOException) {
