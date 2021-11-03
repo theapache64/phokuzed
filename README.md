@@ -1,19 +1,18 @@
 ![](cover.jpeg)
 
-# compose-android-template
+# 🎯 phokuzed
 
-![buildStatus](https://img.shields.io/github/workflow/status/theapache64/compose-android-template/Java%20CI%20with%20Gradle?style=plastic)
-![latestVersion](https://img.shields.io/github/v/release/theapache64/compose-android-template)
+<!--![buildStatus](https://img.shields.io/github/workflow/status/theapache64/compose-android-template/Java%20CI%20with%20Gradle?style=plastic)
+![latestVersion](https://img.shields.io/github/v/release/theapache64/compose-android-template)-->
 <a href="https://twitter.com/theapache64" target="_blank">
 <img alt="Twitter: theapache64" src="https://img.shields.io/twitter/follow/theapache64.svg?style=social" />
 </a>
 
-> An Android project template with MVVM, Hilt, Navigation and Compose
+> Android app to block your own access to distracting websites etc for a predetermined period of time. It can not be undone by the app or by a restart – you must wait for the timer to run out.
 
-## 🔴 Status
+## 🚧 Status
 
 **UNDER ACTIVE DEVELOPMENT**
-
 
 ## 📄 Terminologies
 
@@ -24,8 +23,8 @@
 
 ## 🤨 FAQ
 
-- Why timer gets current time from a REST API? Why not `System.currentTimeMillis()` ?
-  - To prevent overriding the time
+**Q:** Why timer gets current time from a REST API? Why not `System.currentTimeMillis()` ?
+**A:** To prevent overriding the time
 
 ## ✍️ Author
 
@@ -62,9 +61,10 @@ Give a ⭐️ if this project helped you!
     <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="160">
 </a>
 
-## ☑️ TODO
+## 🙇🏻 Credits
 
-- [x] Integrate with [create-compose-app](https://github.com/theapache64/create-compose-app)
+- Inspired by [SelfControlApp](https://github.com/SelfControlApp/selfcontrol). Thanks to [cstigler](https://github.com/cstigler) for maintaining such an amazing tool.
+- 
 
 ## 📝 License
 
