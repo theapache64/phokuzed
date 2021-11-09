@@ -29,4 +29,9 @@ abstract class BaseViewModel<VS, I, VA>(
     fun emitViewAction(action: VA) {
         _viewAction.tryEmit(ViewAction(action))
     }
+
+
+    inline fun <reified T : VS> getCurrentState() : T? {
+        return viewState.value as? T
+    }
 }

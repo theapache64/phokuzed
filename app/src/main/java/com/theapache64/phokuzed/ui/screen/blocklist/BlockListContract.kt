@@ -8,7 +8,9 @@ sealed class BlockListViewState {
         val shouldEnableRemove : Boolean
     ) : BlockListViewState()
 
-    object BlockListEmpty : BlockListViewState()
+    data class BlockListEmpty(
+        val shouldEnableRemove : Boolean
+    ) : BlockListViewState()
 }
 
 // Interactors (UI to ViewModel)

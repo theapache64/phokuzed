@@ -44,7 +44,7 @@ object RootUtils {
     ): Boolean = withContext(Dispatchers.IO) {
         // remounting to read-write
         val readWriteResult = Shell.su(
-            "mount -o ${MountType.READ_WRITE.option},remount /system"
+            "mount -o ${MountType.READ_WRITE.option},remount /system" // TODO : Verify device compat
         ).exec()
 
         val isReadWriteable =

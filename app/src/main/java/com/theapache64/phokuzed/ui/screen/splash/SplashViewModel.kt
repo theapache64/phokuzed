@@ -7,6 +7,7 @@ import com.theapache64.phokuzed.BuildConfig
 import com.theapache64.phokuzed.core.RootUtils
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
+import com.theapache64.phokuzed.data.repo.RootRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
 import com.theapache64.phokuzed.util.exhaustive
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val configRepo: ConfigRepo
+    private val configRepo: ConfigRepo,
+    private val rootRepo : RootRepo
 ) : BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>(
     defaultViewState = SplashViewState.ConfigLoading
 ), DefaultLifecycleObserver {
@@ -63,7 +65,7 @@ class SplashViewModel @Inject constructor(
 
     private fun performRootCheck(onRootAccess: () -> Unit) {
         viewModelScope.launch {
-            if(RootUtils.hasRootAccess()){
+            if(rootRepo.isRooted()){
                 Timber.d("performRootCheck: yey got root")
                 onRootAccess()
             }else{
@@ -102,11 +104,6 @@ class SplashViewModel @Inject constructor(
     }
 
     var resumeCount = 0
-
-    /*override fun onResume(owner: LifecycleOwner) {
-        Timber.d("onResume: Hit it ")
-
-    }*/
 
     override fun onStart(owner: LifecycleOwner) {
         resumeCount++

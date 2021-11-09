@@ -34,7 +34,7 @@ class BlockListRepoImpl @Inject constructor(
             defaultBlockList
         } else {
             blockList
-        }
+        }.toSortedSet()
     }
 
     override fun saveBlockList(blockList: Set<String>) {

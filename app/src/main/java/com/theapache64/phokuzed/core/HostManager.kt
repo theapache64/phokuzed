@@ -41,6 +41,8 @@ class HostManager(
             error("domainSet can't be empty")
         }
 
+        // TODO: Generate possible subdomains like api.domain.com
+
         // first remove the existing p-rules
         val freshHostFile = removeRules()
         return if (domainsToBlock.isEmpty()) {
@@ -50,9 +52,14 @@ class HostManager(
                 .append("\n$COMMENT_BEGIN\n")
 
             for (domain in domainsToBlock) {
+                // sanitize domain
                 newHostContentBuilder
                     .append("${getV4BlockLine(domain)}\n")
                     .append("${getV6BlockLine(domain)}\n")
+                    // the api.domain also
+                    .append("${getV4BlockLine("api.$domain")}\n")
+                    .append("${getV6BlockLine("api.$domain")}\n")
+
             }
 
             newHostContentBuilder
@@ -64,22 +71,5 @@ class HostManager(
 
     private fun getV6BlockLine(domain: String) = "$UNKNOWN_IP_V6 $domain"
     private fun getV4BlockLine(domain: String) = "$UNKNOWN_IP_V4 $domain"
-
-    fun getDomains(): Set<String> {
-        return if (hostFileContent.contains(COMMENT_BEGIN) && hostFileContent.contains(COMMENT_END)) {
-            val startIndex = hostFileContent.indexOf(COMMENT_BEGIN)
-            val endIndex = hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length
-
-            // TODO: Replace this with regEx
-            val pRules = hostFileContent.substring(startIndex, endIndex)
-            pRules.split("\n")
-                .filter { !it.startsWith("#") } // filtering out comments
-                .map { it.split(" ")[1] }
-                .toSet()
-        } else {
-            // return empty list if there's no start and end sign
-            emptySet()
-        }
-    }
 
 }

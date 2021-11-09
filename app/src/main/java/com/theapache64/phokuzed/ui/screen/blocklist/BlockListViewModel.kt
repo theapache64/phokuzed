@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BlockListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val blockListRepo: BlockListRepo
+    private val blockListRepo: BlockListRepo,
 ) : BaseViewModel<BlockListViewState, BlockListInteractor, BlockListViewAction>(
     defaultViewState = BlockListViewState.Loading
 ) {
@@ -31,7 +31,7 @@ class BlockListViewModel @Inject constructor(
 
     private fun onBlockListUpdated(blockList: Set<String>, shouldEnableRemove: Boolean) {
         if (blockList.isEmpty()) {
-            emitViewState(BlockListViewState.BlockListEmpty)
+            emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
         } else {
             emitViewState(
                 BlockListViewState.Active(
@@ -58,6 +58,18 @@ class BlockListViewModel @Inject constructor(
 
     private fun onAddDomainClick(domain: String) {
         // TODO: Input validation
+        viewModelScope.launch {
+            val newBlockList = blockListRepo.getBlockList().toMutableSet().apply {
+                add(domain)
+            }
+            blockListRepo.saveBlockList(newBlockList)
+            val shouldEnableRemove =
+                getCurrentState<BlockListViewState.Active>()?.shouldEnableRemove
+                    ?: getCurrentState<BlockListViewState.BlockListEmpty>()?.shouldEnableRemove
+                    ?: error("TSH: The state should be either Active or BlockListEmpty")
+
+            onBlockListUpdated(newBlockList, shouldEnableRemove)
+        }
 
         emitViewAction(BlockListViewAction.DismissAddDialog)
     }
@@ -72,9 +84,10 @@ class BlockListViewModel @Inject constructor(
                 remove(domain)
             }.let { newBlockList ->
                 blockListRepo.saveBlockList(newBlockList)
-                val currentState = viewState.value as BlockListViewState.Active
+                val currentState: BlockListViewState.Active = getCurrentState()!!
                 onBlockListUpdated(newBlockList, currentState.shouldEnableRemove)
             }
         }
     }
+
 }

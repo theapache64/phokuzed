@@ -9,6 +9,8 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +34,7 @@ fun BlockListScreen(
 
     var isShowAddDialog by remember { mutableStateOf(false) }
     var newDomain by remember { mutableStateOf("") } // TODO: move to viewModel?
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(viewAction) {
         when (viewAction) {
@@ -63,7 +66,8 @@ fun BlockListScreen(
                     value = newDomain,
                     onValueChange = {
                         newDomain = it
-                    }
+                    },
+                    modifier = Modifier.focusRequester(focusRequester),
                 )
             },
             confirmButton = {
@@ -74,6 +78,10 @@ fun BlockListScreen(
                 }
             }
         )
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
     }
 
     Scaffold(
@@ -119,7 +127,7 @@ fun BlockListScreen(
                     }
                 )
             }
-            BlockListViewState.BlockListEmpty -> {
+            is BlockListViewState.BlockListEmpty -> {
                 EmptyUi()
             }
         }.exhaustive()

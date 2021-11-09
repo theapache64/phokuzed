@@ -1,5 +1,6 @@
 package com.theapache64.phokuzed.ui.screen.blocklist
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.github.theapache64.expekt.should
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +21,12 @@ class BlockListViewModelTest {
         val viewModel = BlockListViewModel(
             blockListRepo = mock {
                 onBlocking { getBlockList() } doReturn fakeDomains
-            }
+            },
+            savedStateHandle = SavedStateHandle(
+                mapOf(
+                     BlockListViewModel.ARG_SHOULD_ENABLE_REMOVE to true
+                )
+            )
         )
 
         viewModel.viewState.test {
