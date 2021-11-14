@@ -84,12 +84,10 @@ private fun WatchViewAction(
 ) {
     val context = LocalContext.current
     val dynViewAction by viewModel.viewAction.collectAsState(null)
-    val viewAction = dynViewAction?.action
-
-    LaunchedEffect(viewAction) {
+    LaunchedEffect(dynViewAction) {
+        val viewAction = dynViewAction?.action
         when (viewAction) {
             is DashboardViewAction.ShowDurationPicker -> {
-
                 launchTimePicker(
                     activity = context as FragmentActivity,
                     onTimePicked = { timePicker ->

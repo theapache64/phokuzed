@@ -27,7 +27,8 @@ abstract class BaseViewModel<VS, I, VA>(
     }
 
     fun emitViewAction(action: VA) {
-        _viewAction.tryEmit(ViewAction(action))
+        val newAction = ViewAction(action)
+        _viewAction.tryEmit(newAction)
     }
 
 
