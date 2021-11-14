@@ -25,15 +25,5 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-
-        Thread {
-            /*val hostFile = File("/system/etc/hosts").canonicalFile
-            remountSystemPartition(hostFile, MountType.READ_WRITE)
-            Shell.su("echo \"# ${Date()}\" >> /system/etc/hosts").exec().also {
-                Timber.d("onCreate: ${it.err} : ${it.out}")
-            }*/
-
-        }.start()
-
     }
 }

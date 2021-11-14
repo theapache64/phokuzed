@@ -8,7 +8,8 @@ import javax.inject.Inject
 interface TimeRepo {
     suspend fun getCurrentTimeInSeconds(): Long
     fun saveTargetSeconds(targetSeconds: Long)
-    abstract fun getTargetSeconds(): Long?
+    fun getTargetSeconds(): Long?
+    fun clearTargetSeconds()
 }
 
 class TimeRepoImpl @Inject constructor(
@@ -36,6 +37,12 @@ class TimeRepoImpl @Inject constructor(
             } else {
                 targetSeconds
             }
+        }
+    }
+
+    override fun clearTargetSeconds() {
+        sharedPref.edit {
+            remove(KEY_TARGET_SECONDS)
         }
     }
 }

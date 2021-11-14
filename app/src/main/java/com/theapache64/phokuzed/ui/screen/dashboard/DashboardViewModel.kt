@@ -30,7 +30,7 @@ class DashboardViewModel @Inject constructor(
         val targetSeconds = timeRepo.getTargetSeconds()
         if (targetSeconds != null) {
             emitViewState(DashboardViewState.Active(targetSeconds))
-        }// otherwise it's idle
+        }
     }
 
     override fun onInteraction(interactor: DashboardInteractor) {
@@ -62,6 +62,8 @@ class DashboardViewModel @Inject constructor(
             val currentHostFileContent = hostRepo.getHostFileContent()
             val newHostFileContent = HostManager(currentHostFileContent).removeRules()
             hostRepo.updateHostFileContent(newHostFileContent)
+            timeRepo.clearTargetSeconds()
+
             // change the state to idle
             emitViewState(DashboardViewState.Idle)
         }
