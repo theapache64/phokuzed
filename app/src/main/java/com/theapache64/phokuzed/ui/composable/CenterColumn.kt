@@ -7,11 +7,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CenterColumn(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier= modifier,
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         content()

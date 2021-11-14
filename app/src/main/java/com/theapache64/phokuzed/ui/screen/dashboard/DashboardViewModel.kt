@@ -24,7 +24,7 @@ class DashboardViewModel @Inject constructor(
     defaultViewState = DashboardViewState.Idle
     // defaultViewState = DashboardViewState.Active((System.currentTimeMillis() / 1000) + (2 * 60)) // TODO : This should be idle
 ) {
-    companion object{
+    companion object {
         const val MIN_DURATION_IN_MINUTES = 20
     }
 

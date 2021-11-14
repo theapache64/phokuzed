@@ -3,7 +3,6 @@ package com.theapache64.phokuzed.ui.composable.timer
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.data.repo.TimeRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
-import com.theapache64.phokuzed.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

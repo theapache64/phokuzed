@@ -4,7 +4,7 @@ import com.topjohnwu.superuser.Shell
 import timber.log.Timber
 
 fun Shell.Result.isSuccessOrLog(
-    msg : String = "Failed"
+    msg: String = "Failed"
 ): Boolean {
     return isSuccess.also { success ->
         if (!success) {

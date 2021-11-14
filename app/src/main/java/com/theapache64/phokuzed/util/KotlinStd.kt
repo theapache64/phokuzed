@@ -17,4 +17,5 @@ package com.theapache64.phokuzed.util
 
 // Workaround for https://youtrack.jetbrains.com/issue/KT-12380
 @Suppress("unused")
-fun Unit.exhaustive() {}
+fun Unit.exhaustive() {
+}

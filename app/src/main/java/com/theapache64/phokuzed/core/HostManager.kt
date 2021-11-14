@@ -56,9 +56,9 @@ class HostManager(
                 newHostContentBuilder
                     .append("${getV4BlockLine(domain)}\n")
                     .append("${getV6BlockLine(domain)}\n")
-                    // TODO: We might need to do this!
-                    /*.append("${getV4BlockLine("api.$domain")}\n")
-                    .append("${getV6BlockLine("api.$domain")}\n")*/
+                // TODO: We might need to do this!
+                /*.append("${getV4BlockLine("api.$domain")}\n")
+                .append("${getV6BlockLine("api.$domain")}\n")*/
 
             }
 

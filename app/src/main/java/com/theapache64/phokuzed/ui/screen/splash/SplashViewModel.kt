@@ -4,7 +4,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.BuildConfig
-import com.theapache64.phokuzed.core.RootUtils
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.data.repo.RootRepo
@@ -21,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val configRepo: ConfigRepo,
-    private val rootRepo : RootRepo
+    private val rootRepo: RootRepo
 ) : BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>(
     defaultViewState = SplashViewState.ConfigLoading
 ), DefaultLifecycleObserver {
@@ -65,10 +64,10 @@ class SplashViewModel @Inject constructor(
 
     private fun performRootCheck(onRootAccess: () -> Unit) {
         viewModelScope.launch {
-            if(rootRepo.isRooted()){
+            if (rootRepo.isRooted()) {
                 Timber.d("performRootCheck: yey got root")
                 onRootAccess()
-            }else{
+            } else {
                 Timber.e("performRootCheck: uh ho no root")
                 emitViewState(SplashViewState.NoRootAccess)
             }

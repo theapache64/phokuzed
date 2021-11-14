@@ -1,4 +1,4 @@
-package com.theapache64.phokuzed.ui.composable;
+package com.theapache64.phokuzed.ui.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CenterBox(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Surface(

@@ -74,7 +74,7 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        if(viewState !is SplashViewState.NoRootAccess){
+        if (viewState !is SplashViewState.NoRootAccess) {
             Image(
                 painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = stringResource(id = R.string.cd_app_logo),

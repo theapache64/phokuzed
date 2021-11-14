@@ -26,8 +26,7 @@ fun ActiveBlockListUi(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .padding(horizontal = 10.dp)
-                    ,
+                        .padding(horizontal = 10.dp),
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -35,7 +34,7 @@ fun ActiveBlockListUi(
                         text = domain
                     )
 
-                    if(activeState.shouldEnableRemove){
+                    if (activeState.shouldEnableRemove) {
                         IconButton(
                             onClick = { onRemoveDomainClicked.invoke(domain) },
                         ) {
