@@ -58,6 +58,5 @@ fun ActiveDashboardUi(
                 Text(text = stringResource(id = R.string.action_extend_timer))
             }*/
         }
-
     }
 }

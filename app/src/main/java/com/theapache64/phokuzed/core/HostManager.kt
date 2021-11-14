@@ -1,6 +1,5 @@
 package com.theapache64.phokuzed.core
 
-
 data class Host(
     val ipType: IpType,
     val ip: String,
@@ -14,7 +13,6 @@ data class Host(
 class HostManager(
     private val hostFileContent: String
 ) {
-
 
     companion object {
         const val COMMENT_BEGIN = "# PHOKUZED RULES BEGIN HERE"
@@ -59,7 +57,6 @@ class HostManager(
                 // TODO: We might need to do this!
                 /*.append("${getV4BlockLine("api.$domain")}\n")
                 .append("${getV6BlockLine("api.$domain")}\n")*/
-
             }
 
             newHostContentBuilder
@@ -71,5 +68,4 @@ class HostManager(
 
     private fun getV6BlockLine(domain: String) = "$UNKNOWN_IP_V6 $domain"
     private fun getV4BlockLine(domain: String) = "$UNKNOWN_IP_V4 $domain"
-
 }

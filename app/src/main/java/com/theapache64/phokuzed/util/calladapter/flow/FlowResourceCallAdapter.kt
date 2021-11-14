@@ -55,7 +55,6 @@ class FlowResourceCallAdapter<R>(
             val errorBody = resp.message()
             emit(Resource.Error(errorBody))
         }
-
     }.catch { error: Throwable ->
         error.printStackTrace()
         if (isSelfExceptionHandling) {

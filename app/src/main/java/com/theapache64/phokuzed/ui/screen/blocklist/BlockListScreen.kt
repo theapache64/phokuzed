@@ -49,7 +49,6 @@ fun BlockListScreen(
             null -> {
                 // do nothing
             }
-
         }.exhaustive()
     }
 
@@ -143,7 +142,6 @@ fun EmptyUi() {
         }
     }
 }
-
 
 @Composable
 fun LoadingUi() {

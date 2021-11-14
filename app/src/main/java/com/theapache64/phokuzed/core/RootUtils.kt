@@ -27,7 +27,6 @@ private enum class MountType(
      * Mount as read/write.
      */
     READ_WRITE("rw");
-
 }
 
 object RootUtils {
@@ -61,6 +60,4 @@ object RootUtils {
             false
         }
     }
-
-
 }

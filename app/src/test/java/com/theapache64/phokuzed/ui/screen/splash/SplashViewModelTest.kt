@@ -75,5 +75,4 @@ class SplashViewModelTest {
             awaitItem().action.should.instanceof(SplashViewAction.OpenUrl::class.java)
         }
     }
-
 }

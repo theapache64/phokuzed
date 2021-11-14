@@ -93,7 +93,6 @@ class DashboardViewModel @Inject constructor(
             val hoursInSeconds = Duration.hours(interactor.hour).inWholeSeconds
             val minutesInSeconds = Duration.minutes(interactor.minute).inWholeSeconds
 
-
             try {
                 val targetSeconds =
                     timeRepo.getCurrentTimeInSeconds() + hoursInSeconds + minutesInSeconds

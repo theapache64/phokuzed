@@ -31,7 +31,6 @@ abstract class BaseViewModel<VS, I, VA>(
         _viewAction.tryEmit(newAction)
     }
 
-
     inline fun <reified T : VS> getCurrentState(): T? {
         return viewState.value as? T
     }

@@ -3,7 +3,6 @@ package com.theapache64.phokuzed.core
 import com.github.theapache64.expekt.should
 import org.junit.Test
 
-
 class HostManagerTest {
     @Test
     fun `Rules are inserted at correct position`() {
@@ -77,7 +76,7 @@ class HostManagerTest {
     }
 
     @Test
-    fun `Removes the begin and end comment when there's no domain`(){
+    fun `Removes the begin and end comment when there's no domain`() {
         // Test data
         val inputHostFileContent = """
             ## This is a comment

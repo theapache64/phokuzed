@@ -101,7 +101,6 @@ private fun WatchViewAction(
                         )
                     }
                 )
-
             }
             is DashboardViewAction.GoToBlockList -> {
                 val shouldEnableRemove = viewAction.shouldEnableRemove

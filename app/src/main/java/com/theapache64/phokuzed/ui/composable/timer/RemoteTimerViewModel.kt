@@ -76,6 +76,4 @@ class RemoteTimerViewModel @Inject constructor(
             }
         }
     }
-
-
 }

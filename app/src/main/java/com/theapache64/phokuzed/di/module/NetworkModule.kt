@@ -60,9 +60,11 @@ class NetworkModule {
     fun provideWorldTimeApi(moshi: Moshi): WorldTimeApi {
         // TODO: Refactor
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .readTimeout(kotlin.time.Duration.seconds(60).inWholeSeconds, TimeUnit.SECONDS)
             .build()
 

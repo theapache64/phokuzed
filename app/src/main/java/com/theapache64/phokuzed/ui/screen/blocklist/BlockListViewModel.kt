@@ -89,5 +89,4 @@ class BlockListViewModel @Inject constructor(
             }
         }
     }
-
 }

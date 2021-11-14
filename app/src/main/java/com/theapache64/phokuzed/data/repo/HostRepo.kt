@@ -13,7 +13,6 @@ interface HostRepo {
 
     suspend fun updateHostFileContent(content: String): Boolean
     suspend fun getHostFileContent(): String
-
 }
 
 class HostRepoImpl @Inject constructor() : HostRepo {
@@ -22,7 +21,6 @@ class HostRepoImpl @Inject constructor() : HostRepo {
         // TODO : Use su here
         return File("/etc/hosts").readText()
     }
-
 
     override suspend fun updateHostFileContent(content: String): Boolean =
         withContext(Dispatchers.IO) {

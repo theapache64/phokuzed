@@ -24,7 +24,6 @@ fun IdleUi(
         modifier = modifier.fillMaxSize()
     ) {
 
-
         Column(
             modifier = Modifier
                 .align(Alignment.Center),
@@ -41,7 +40,6 @@ fun IdleUi(
             }
         }
 
-
         /*Action : Edit Blocklist*/
         Button(
             onClick = {
@@ -53,6 +51,5 @@ fun IdleUi(
         ) {
             Text(text = stringResource(id = R.string.action_edit_block))
         }
-
     }
 }

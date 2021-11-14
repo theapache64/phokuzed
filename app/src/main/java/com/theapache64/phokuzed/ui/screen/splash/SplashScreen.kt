@@ -33,7 +33,6 @@ fun SplashScreen(
     val viewState by viewModel.viewState.collectAsState()
     val viewAction by viewModel.viewAction.collectAsState(null)
 
-
     LaunchedEffect(Unit) {
         viewModel.init()
 
