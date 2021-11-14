@@ -1,6 +1,8 @@
 
 package com.theapache64.phokuzed.ui.screen.dashboard
 
+import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
+import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.util.exhaustive
 
@@ -105,11 +108,23 @@ private fun WatchViewAction(
                 val shouldEnableRemove = viewAction.shouldEnableRemove
                 onEditBlockListClicked.invoke(shouldEnableRemove)
             }
+            DashboardViewAction.MinTime -> {
+                showMinTimeError(context)
+            }
             null -> {
                 // do nothing
             }
         }.exhaustive()
     }
+}
+
+private fun showMinTimeError(context: Context) {
+    // TODO: Convert this to a SnackBar with RETRY launching time picker
+    val msg = context.getString(
+        R.string.dashboard_min_time_error,
+        DashboardViewModel.MIN_DURATION_IN_MINUTES
+    )
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 }
 
 fun launchTimePicker(

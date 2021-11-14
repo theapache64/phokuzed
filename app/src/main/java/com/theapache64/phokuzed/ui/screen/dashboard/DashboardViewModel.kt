@@ -20,11 +20,13 @@ class DashboardViewModel @Inject constructor(
     private val timeRepo: TimeRepo,
     private val hostRepo: HostRepo,
     private val blockListRepo: BlockListRepo
-) :
-    BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
-        defaultViewState = DashboardViewState.Idle
-        // defaultViewState = DashboardViewState.Active((System.currentTimeMillis() / 1000) + (2 * 60)) // TODO : This should be idle
-    ) {
+) : BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
+    defaultViewState = DashboardViewState.Idle
+    // defaultViewState = DashboardViewState.Active((System.currentTimeMillis() / 1000) + (2 * 60)) // TODO : This should be idle
+) {
+    companion object{
+        const val MIN_DURATION_IN_MINUTES = 20
+    }
 
     init {
         val targetSeconds = timeRepo.getTargetSeconds()
@@ -80,10 +82,18 @@ class DashboardViewModel @Inject constructor(
     @OptIn(ExperimentalTime::class)
     private fun onTimePicked(interactor: DashboardInteractor.TimePicked) {
         viewModelScope.launch {
+            // validation
+            if (interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
+                emitViewAction(DashboardViewAction.MinTime)
+                return@launch
+            }
+
             emitViewState(DashboardViewState.Loading(R.string.dashboard_calculating_time))
 
             val hoursInSeconds = Duration.hours(interactor.hour).inWholeSeconds
             val minutesInSeconds = Duration.minutes(interactor.minute).inWholeSeconds
+
+
             try {
                 val targetSeconds =
                     timeRepo.getCurrentTimeInSeconds() + hoursInSeconds + minutesInSeconds
