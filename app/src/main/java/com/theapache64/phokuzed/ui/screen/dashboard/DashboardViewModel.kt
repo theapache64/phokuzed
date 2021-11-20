@@ -62,7 +62,7 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             // modify the host file
             val currentHostFileContent = hostRepo.getHostFileContent()
-            val newHostFileContent = HostManager(currentHostFileContent).removeRules()
+            val newHostFileContent = HostManager(currentHostFileContent).clearRules()
             hostRepo.updateHostFileContent(newHostFileContent)
             timeRepo.clearTargetSeconds()
 
@@ -83,8 +83,8 @@ class DashboardViewModel @Inject constructor(
     private fun onTimePicked(interactor: DashboardInteractor.TimePicked) {
         viewModelScope.launch {
             // validation
-            if (interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
-                emitViewAction(DashboardViewAction.MinTime)
+            if (false && interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
+                emitViewAction(DashboardViewAction.ErrorMinTime)
                 return@launch
             }
 

@@ -26,7 +26,8 @@ class BlockListViewModelTest {
                 mapOf(
                     BlockListViewModel.ARG_SHOULD_ENABLE_REMOVE to true
                 )
-            )
+            ),
+            hostRepo = mock() // FIXME:
         )
 
         viewModel.viewState.test {

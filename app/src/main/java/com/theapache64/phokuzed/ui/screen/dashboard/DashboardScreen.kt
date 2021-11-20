@@ -106,7 +106,7 @@ private fun WatchViewAction(
                 val shouldEnableRemove = viewAction.shouldEnableRemove
                 onEditBlockListClicked.invoke(shouldEnableRemove)
             }
-            DashboardViewAction.MinTime -> {
+            DashboardViewAction.ErrorMinTime -> {
                 showMinTimeError(context)
             }
             null -> {

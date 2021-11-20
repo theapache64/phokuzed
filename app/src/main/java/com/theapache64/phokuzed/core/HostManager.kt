@@ -21,12 +21,16 @@ class HostManager(
         const val UNKNOWN_IP_V6 = "::"
     }
 
-    fun removeRules(): String {
+    fun clearRules(): String {
         return if (hostFileContent.contains(COMMENT_BEGIN) && hostFileContent.contains(COMMENT_END)) {
-            val startIndex =
+            var startIndex =
                 hostFileContent.indexOf(COMMENT_BEGIN) - 1 // -1 because we added \n at the start
             val endIndex =
-                hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length + 1 // +1 because we added \n at the end
+                hostFileContent.indexOf(COMMENT_END) + COMMENT_END.length
+
+            if (startIndex < 0) {
+                startIndex = 0
+            }
 
             hostFileContent.removeRange(startIndex, endIndex)
         } else {
@@ -42,7 +46,7 @@ class HostManager(
         // TODO: Generate possible subdomains like api.domain.com
 
         // first remove the existing p-rules
-        val freshHostFile = removeRules()
+        val freshHostFile = clearRules()
         return if (domainsToBlock.isEmpty()) {
             freshHostFile
         } else {

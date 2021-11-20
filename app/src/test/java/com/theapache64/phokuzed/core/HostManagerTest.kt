@@ -76,6 +76,32 @@ class HostManagerTest {
     }
 
     @Test
+    fun `Rules are removed from an empty host file`() {
+        // Test data
+        val inputHostFileContent = ""
+
+        val expectedHostFileContent = """
+            ${HostManager.COMMENT_BEGIN}
+            0.0.0.0 instagram.com
+            :: instagram.com
+            ${HostManager.COMMENT_END}
+        """.trimIndent()
+
+        // First we'll add the rules
+        val appliedHostFileContent = HostManager(inputHostFileContent).run {
+            applyBlockList(setOf("instagram.com"))
+        }
+        expectedHostFileContent.should.equal(appliedHostFileContent)
+
+        // Then remove the rules
+        val emptyHostFileContent = HostManager(expectedHostFileContent).run {
+            clearRules()
+        }
+
+        emptyHostFileContent.should.equal(inputHostFileContent)
+    }
+
+    @Test
     fun `Removes the begin and end comment when there's no domain`() {
         // Test data
         val inputHostFileContent = """
@@ -103,7 +129,7 @@ class HostManagerTest {
 
         // Let's begin the test
         val hostManager = HostManager(inputHostFileContent)
-        val actualHostFileContent = hostManager.removeRules()
+        val actualHostFileContent = hostManager.clearRules()
         expectedHostFileContent.should.equal(actualHostFileContent)
     }
 }

@@ -24,6 +24,6 @@ sealed class DashboardInteractor {
 // ViewAction (ViewModel to UI - to notify one-time events)
 sealed class DashboardViewAction {
     object ShowDurationPicker : DashboardViewAction()
-    object MinTime : DashboardViewAction()
+    object ErrorMinTime : DashboardViewAction()
     data class GoToBlockList(val shouldEnableRemove: Boolean) : DashboardViewAction()
 }
