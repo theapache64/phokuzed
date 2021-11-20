@@ -44,14 +44,23 @@ class HostManager(
         }
 
         // TODO: Generate possible subdomains like api.domain.com
-
         // first remove the existing p-rules
-        val freshHostFile = clearRules()
+        val freshHostFileContent = clearRules()
+        val optionalNewLine =
+            if (
+                freshHostFileContent.isBlank() || // file is blank
+                freshHostFileContent.lastOrNull() == '\n' // ends with new line
+            ) {
+                ""
+            } else {
+                "\n"
+            }
+
         return if (domainsToBlock.isEmpty()) {
-            freshHostFile
+            freshHostFileContent
         } else {
-            val newHostContentBuilder = StringBuilder(freshHostFile)
-                .append("\n$COMMENT_BEGIN\n")
+            val newHostContentBuilder = StringBuilder(freshHostFileContent)
+                .append("$optionalNewLine$COMMENT_BEGIN\n")
 
             for (domain in domainsToBlock) {
                 // sanitize domain
@@ -64,8 +73,7 @@ class HostManager(
             }
 
             newHostContentBuilder
-                .append("$COMMENT_END\n")
-                .trim()
+                .append(COMMENT_END)
                 .toString()
         }
     }

@@ -22,7 +22,6 @@ class HostManagerTest {
             127.0.0.1	localhost
             255.255.255.255 broadcasthost
             ::1             localhost
-            
             ${HostManager.COMMENT_BEGIN}
             ${HostManager.UNKNOWN_IP_V4} $domainToBlock
             ${HostManager.UNKNOWN_IP_V6} $domainToBlock
@@ -43,15 +42,12 @@ class HostManagerTest {
             127.0.0.1	localhost
             255.255.255.255 broadcasthost
             ::1             localhost
-            
-            
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
             :: instagram.com
             0.0.0.0 facebook.com
             :: facebook.com
             ${HostManager.COMMENT_END}
-            
             # some comment
         """.trimIndent()
 
@@ -60,8 +56,6 @@ class HostManagerTest {
             127.0.0.1	localhost
             255.255.255.255 broadcasthost
             ::1             localhost
-            
-            
             # some comment
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
@@ -109,14 +103,12 @@ class HostManagerTest {
             127.0.0.1	localhost
             255.255.255.255 broadcasthost
             ::1             localhost
-            
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
             :: instagram.com
             0.0.0.0 facebook.com
             :: facebook.com
             ${HostManager.COMMENT_END}
-            
         """.trimIndent()
 
         val expectedHostFileContent = """
@@ -124,12 +116,11 @@ class HostManagerTest {
             127.0.0.1	localhost
             255.255.255.255 broadcasthost
             ::1             localhost
-            
         """.trimIndent()
 
         // Let's begin the test
         val hostManager = HostManager(inputHostFileContent)
         val actualHostFileContent = hostManager.clearRules()
-        expectedHostFileContent.should.equal(actualHostFileContent)
+        actualHostFileContent.should.equal(expectedHostFileContent)
     }
 }
