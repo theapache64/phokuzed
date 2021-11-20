@@ -1,10 +1,13 @@
 package com.theapache64.phokuzed.core
 
+import com.theapache64.phokuzed.data.repo.HostRepoImpl
 import com.theapache64.phokuzed.util.isSuccessOrLog
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.internal.closeQuietly
+import timber.log.Timber
+import java.io.File
 
 /**
  * This class is an enum to define mount type.
@@ -41,9 +44,12 @@ object RootUtils {
     suspend fun remountSystemPartition(
         block: () -> Unit
     ): Boolean = withContext(Dispatchers.IO) {
+
+        val partition = findPartition(File(HostRepoImpl.PATH_HOSTS))
+
         // remounting to read-write
         val readWriteResult = Shell.su(
-            "mount -o ${MountType.READ_WRITE.option},remount /system" // TODO : Verify device compat
+            "mount -o ${MountType.READ_WRITE.option},remount $partition" // TODO : Verify device compat
         ).exec()
 
         val isReadWriteable =
@@ -52,12 +58,33 @@ object RootUtils {
             block()
             // remounting to read only
             val readResult = Shell.su(
-                "mount -o ${MountType.READ_ONLY.option},remount /system"
+                "mount -o ${MountType.READ_ONLY.option},remount $partition"
             ).exec()
 
             readResult.isSuccessOrLog(msg = "Failed to mount back to read only")
         } else {
             false
         }
+    }
+
+    /**
+     * To find mount point for the given file
+     */
+    private fun findPartition(_file: File): String? {
+        var file: File? = _file
+        val result = Shell.su("cat /proc/mounts | cut -d ' ' -f2").exec()
+        val mounts = result.out
+        while (file != null) {
+            val path = file.absolutePath
+            for (mount in mounts) {
+                if (path == mount) {
+                    return mount.also { partition ->
+                        Timber.d("findPartition: partition is $partition")
+                    }
+                }
+            }
+            file = file.parentFile
+        }
+        return null
     }
 }

@@ -31,7 +31,7 @@ class HostManagerTest {
 
         // Let's begin the test
         val hostManager = HostManager(inputHostFileContent)
-        val actualHostFileContent = hostManager.apply(setOf(domainToBlock))
+        val actualHostFileContent = hostManager.applyBlockList(setOf(domainToBlock))
         expectedHostFileContent.should.equal(actualHostFileContent)
     }
 
@@ -71,7 +71,7 @@ class HostManagerTest {
 
         // Let's begin the test
         val hostManager = HostManager(inputHostFileContent)
-        val actualHostFileContent = hostManager.apply(setOf("instagram.com"))
+        val actualHostFileContent = hostManager.applyBlockList(setOf("instagram.com"))
         expectedHostFileContent.should.equal(actualHostFileContent)
     }
 

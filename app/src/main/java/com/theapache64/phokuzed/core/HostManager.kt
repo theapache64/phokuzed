@@ -34,7 +34,7 @@ class HostManager(
         }
     }
 
-    fun apply(domainsToBlock: Set<String>): String {
+    fun applyBlockList(domainsToBlock: Set<String>): String {
         if (domainsToBlock.isEmpty()) {
             error("domainSet can't be empty")
         }

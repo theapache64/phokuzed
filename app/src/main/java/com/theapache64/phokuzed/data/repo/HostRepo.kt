@@ -16,10 +16,13 @@ interface HostRepo {
 }
 
 class HostRepoImpl @Inject constructor() : HostRepo {
+    companion object {
+        const val PATH_HOSTS = "/system/etc/hosts"
+    }
 
     override suspend fun getHostFileContent(): String {
         // TODO : Use su here
-        return File("/etc/hosts").readText()
+        return File(PATH_HOSTS).readText()
     }
 
     override suspend fun updateHostFileContent(content: String): Boolean =
@@ -28,7 +31,7 @@ class HostRepoImpl @Inject constructor() : HostRepo {
 
             RootUtils.remountSystemPartition {
                 val result = Shell.su(
-                    "echo \"$content\" >/system/etc/hosts"
+                    "echo \"$content\" >$PATH_HOSTS"
                 ).exec()
 
                 result.isSuccessOrLog(

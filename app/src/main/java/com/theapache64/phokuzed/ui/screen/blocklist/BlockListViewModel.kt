@@ -2,7 +2,9 @@ package com.theapache64.phokuzed.ui.screen.blocklist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.theapache64.phokuzed.core.HostManager
 import com.theapache64.phokuzed.data.repo.BlockListRepo
+import com.theapache64.phokuzed.data.repo.HostRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,10 +15,12 @@ import javax.inject.Inject
 class BlockListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val blockListRepo: BlockListRepo,
+    private val hostRepo: HostRepo
 ) : BaseViewModel<BlockListViewState, BlockListInteractor, BlockListViewAction>(
     defaultViewState = BlockListViewState.Loading
 ) {
     companion object {
+        // FIXME: Replace this with an enum to provide 2 modes in BlockList.
         const val ARG_SHOULD_ENABLE_REMOVE = "should_enable_remove"
     }
 
@@ -30,15 +34,25 @@ class BlockListViewModel @Inject constructor(
     }
 
     private fun onBlockListUpdated(blockList: Set<String>, shouldEnableRemove: Boolean) {
-        if (blockList.isEmpty()) {
-            emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
-        } else {
-            emitViewState(
-                BlockListViewState.Active(
-                    blockList,
-                    shouldEnableRemove = shouldEnableRemove
-                )
-            )
+        // FIXME: Call updateHostFileContent here
+
+        viewModelScope.launch {
+            val currentHostFileContent = hostRepo.getHostFileContent()
+            val newHostFileContent = HostManager(currentHostFileContent).applyBlockList(blockList)
+            val isSuccess = hostRepo.updateHostFileContent(newHostFileContent)
+
+            if (isSuccess) {
+                if (blockList.isEmpty()) {
+                    emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
+                } else {
+                    emitViewState(
+                        BlockListViewState.Active(
+                            blockList,
+                            shouldEnableRemove = shouldEnableRemove
+                        )
+                    )
+                }
+            }
         }
     }
 

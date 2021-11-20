@@ -106,12 +106,16 @@ class DashboardViewModel @Inject constructor(
                 val hostFileContent = hostRepo.getHostFileContent()
 
                 // install the blocklist inside the host file content
-                val newHostFileContent = HostManager(hostFileContent).apply(blockList)
+                val newHostFileContent = HostManager(hostFileContent).applyBlockList(blockList)
 
                 // update the host file with new content
-                hostRepo.updateHostFileContent(newHostFileContent)
+                val isUpdated = hostRepo.updateHostFileContent(newHostFileContent)
 
-                emitViewState(DashboardViewState.Active(targetSeconds))
+                if (isUpdated) {
+                    emitViewState(DashboardViewState.Active(targetSeconds))
+                } else {
+                    emitViewState(DashboardViewState.Error("Something went wrong"))
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
                 emitViewState(DashboardViewState.Error(e.message ?: "Something went wrong"))
