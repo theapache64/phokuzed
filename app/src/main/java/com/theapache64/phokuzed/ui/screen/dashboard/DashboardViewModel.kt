@@ -83,7 +83,7 @@ class DashboardViewModel @Inject constructor(
     private fun onTimePicked(interactor: DashboardInteractor.TimePicked) {
         viewModelScope.launch {
             // validation
-            if (false && interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
+            if (interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
                 emitViewAction(DashboardViewAction.ErrorMinTime)
                 return@launch
             }
@@ -114,7 +114,7 @@ class DashboardViewModel @Inject constructor(
                 if (isUpdated) {
                     emitViewState(DashboardViewState.Active(targetSeconds))
                 } else {
-                    emitViewState(DashboardViewState.Error("Something went wrong"))
+                    emitViewState(DashboardViewState.Error("Failed to edit hosts file"))
                 }
             } catch (e: IOException) {
                 e.printStackTrace()

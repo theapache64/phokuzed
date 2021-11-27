@@ -55,12 +55,11 @@ object RootUtils {
         val isReadWriteable =
             readWriteResult.isSuccessOrLog(msg = "remountSystemPartition: Remounting failed")
         if (isReadWriteable) {
-            block()
             // remounting to read only
+            block()
             val readResult = Shell.su(
                 "mount -o ${MountType.READ_ONLY.option},remount $partition"
             ).exec()
-
             readResult.isSuccessOrLog(msg = "Failed to mount back to read only")
         } else {
             false

@@ -5,7 +5,6 @@ import com.theapache64.phokuzed.util.isSuccessOrLog
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -27,8 +26,6 @@ class HostRepoImpl @Inject constructor() : HostRepo {
 
     override suspend fun updateHostFileContent(content: String): Boolean =
         withContext(Dispatchers.IO) {
-            Timber.d("writeHostFileContent: Content is '$content'")
-
             RootUtils.remountSystemPartition {
                 val result = Shell.su(
                     "echo \"$content\" >$PATH_HOSTS"
