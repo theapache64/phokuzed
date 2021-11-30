@@ -237,6 +237,62 @@
     "name": "Topjohnwu/libsu",
     "description": "A complete solution for apps using root permissions"
    }
+  },
+  {
+   "id": 19,
+   "type": "implementation",
+   "installed_name": "room-runtime",
+   "gpm_dep": {
+    "artifact_id": "room-runtime",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.room/room-runtime",
+    "get_from": "Google",
+    "group_id": "androidx.room",
+    "name": "Android Room Runtime",
+    "description": "Android Room-Runtime"
+   }
+  },
+  {
+   "id": 20,
+   "type": "kapt",
+   "installed_name": "okhttp",
+   "gpm_dep": {
+    "artifact_id": "okhttp",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp",
+    "get_from": "Central",
+    "group_id": "com.squareup.okhttp3",
+    "name": "OkHttp",
+    "description": "Square’s meticulous HTTP client for Java and Kotlin."
+   }
+  },
+  {
+   "id": 21,
+   "type": "kapt",
+   "installed_name": "room-compiler",
+   "gpm_dep": {
+    "artifact_id": "room-compiler",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.room/room-compiler",
+    "get_from": "Google",
+    "group_id": "androidx.room",
+    "name": "Android Room Compiler",
+    "description": "Android Room annotation processor"
+   }
+  },
+  {
+   "id": 22,
+   "type": "implementation",
+   "installed_name": "room-ktx",
+   "gpm_dep": {
+    "artifact_id": "room-ktx",
+    "default_type": "implementation",
+    "docs": "https://mvnrepository.com/artifact/androidx.room/room-ktx",
+    "get_from": "Google",
+    "group_id": "androidx.room",
+    "name": "Android Room Kotlin Extensions",
+    "description": "Android Room Kotlin Extensions"
+   }
   }
  ]
 }

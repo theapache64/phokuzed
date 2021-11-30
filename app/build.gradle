@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id("com.google.devtools.ksp") version "$kotlin_version-1.0.0"
+
 }
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -127,4 +129,13 @@ dependencies {
 
     // Topjohnwu/libsu : A complete solution for apps using root permissions
     implementation 'com.github.topjohnwu.libsu:core:3.1.2'
+
+    // Android Room Runtime : Android Room-Runtime
+    implementation "androidx.room:room-runtime:$room_version"
+
+    // Android Room Compiler : Android Room annotation processor
+    ksp "androidx.room:room-compiler:$room_version"
+
+    // Android Room Kotlin Extensions : Android Room Kotlin Extensions
+    implementation "androidx.room:room-ktx:$room_version"
 }

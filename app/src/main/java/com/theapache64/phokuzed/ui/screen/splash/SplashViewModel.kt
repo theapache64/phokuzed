@@ -4,9 +4,13 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.BuildConfig
+import com.theapache64.phokuzed.R
+import com.theapache64.phokuzed.data.local.entity.Subdomain
+import com.theapache64.phokuzed.data.map.map
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.data.repo.RootRepo
+import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
 import com.theapache64.phokuzed.util.exhaustive
@@ -19,9 +23,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val configRepo: ConfigRepo,
-    private val rootRepo: RootRepo
+    private val rootRepo: RootRepo,
+    private val subdomainRepo: SubdomainRepo
 ) : BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>(
-    defaultViewState = SplashViewState.ConfigLoading
+    defaultViewState = SplashViewState.Loading(R.string.splash_loading_init)
 ),
     DefaultLifecycleObserver {
 
@@ -37,32 +42,63 @@ class SplashViewModel @Inject constructor(
 
     fun init() {
         viewModelScope.launch {
-            configRepo.getRemoteConfig().collect {
-                when (it) {
-                    is Resource.Idle -> {
-                        // do nothing
-                    }
-                    is Resource.Loading -> {
-                        emitViewState(SplashViewState.ConfigLoading)
-                    }
+            configRepo.getRemoteConfig()
+                .collect {
+                    when (it) {
+                        is Resource.Idle -> {
+                            // do nothing
+                        }
+                        is Resource.Loading -> {
+                            emitViewState(SplashViewState.Loading(R.string.splash_loading_config))
+                        }
 
-                    is Resource.Success -> {
-                        val config = it.data
-                        // Saving new config
-                        configRepo.saveRemoteConfig(config)
-                        performVersionCheck(config) {
-                            performRootCheck()
+                        is Resource.Success -> {
+                            val config = it.data
+                            onConfigLoaded(config)
+                        }
+                        is Resource.Error -> {
+                            emitViewState(SplashViewState.Error(it.errorData))
                         }
                     }
-                    is Resource.Error -> {
-                        emitViewState(SplashViewState.ConfigError(it.errorData))
-                    }
                 }
-            }
         }
     }
 
-    private fun performRootCheck(onRootAccess: () -> Unit) {
+    private fun onConfigLoaded(config: Config) {
+        // Saving new config
+        configRepo.saveRemoteConfig(config)
+
+        viewModelScope.launch {
+            subdomainRepo.getRemoteSubdomains()
+                .collect { response ->
+                    when (response) {
+                        is Resource.Idle -> {
+                            // do nothing
+                        }
+                        is Resource.Loading -> {
+                            emitViewState(SplashViewState.Loading(R.string.splash_loading_subdomains))
+                        }
+                        is Resource.Success -> {
+                            val newSubdomains = response.data.map { it.map() }
+                            onSubdomainsLoaded(newSubdomains)
+                        }
+                        is Resource.Error -> {
+                            emitViewState(SplashViewState.Error(response.errorData))
+                        }
+                    }.exhaustive()
+                }
+        }
+    }
+
+    private fun onSubdomainsLoaded(newSubdomains: List<Subdomain>) {
+        viewModelScope.launch {
+            subdomainRepo.nukeLocalSubdomains()
+            subdomainRepo.addAll(newSubdomains)
+            performRootCheckAndGoToMainOrThrowErrorState()
+        }
+    }
+
+    private fun performRootCheckAndGoToMainOrThrowErrorState(onRootAccess: () -> Unit) {
         viewModelScope.launch {
             if (rootRepo.isRooted()) {
                 Timber.d("performRootCheck: yey got root")
@@ -97,7 +133,7 @@ class SplashViewModel @Inject constructor(
                 emitViewAction(SplashViewAction.OpenUrl(URL_PLAY_STORE))
             }
             SplashInteractor.RetryRootCheckClick -> {
-                performRootCheck()
+                performRootCheckAndGoToMainOrThrowErrorState()
             }
         }.exhaustive()
     }
@@ -111,14 +147,15 @@ class SplashViewModel @Inject constructor(
             viewModelScope.launch {
                 val config = configRepo.getLocalConfig()
                 performVersionCheck(config) {
-                    performRootCheck()
+                    performRootCheckAndGoToMainOrThrowErrorState()
                 }
             }
         }
     }
 
-    private fun performRootCheck() {
-        performRootCheck {
+    // TODO: Suggest better name if you have any :P
+    private fun performRootCheckAndGoToMainOrThrowErrorState() {
+        performRootCheckAndGoToMainOrThrowErrorState {
             emitViewAction(SplashViewAction.GoToMain)
         }
     }

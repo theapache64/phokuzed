@@ -11,4 +11,7 @@ interface Api {
     @KeyValue
     @GET(Retrosheet.TABLE_CONFIG)
     fun getConfig(): Flow<Resource<Config>>
+
+    @GET(Retrosheet.TABLE_SUBDOMAINS)
+    fun getSubdomains(): Flow<Resource<List<RemoteSubdomain>>>
 }

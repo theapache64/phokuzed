@@ -29,6 +29,10 @@ class NetworkModule {
                 Retrosheet.TABLE_CONFIG,
                 "key", "value"
             )
+            .addSheet(
+                Retrosheet.TABLE_SUBDOMAINS,
+                "main_domain", "sub_domains"
+            )
             .build()
     }
 

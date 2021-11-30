@@ -22,4 +22,7 @@
     <string name="block_list_add_dialog_title">Add new domain</string>
     <string name="action_add">ADD</string>
     <string name="dashboard_min_time_error">Duration should be above %d minutes</string>
+    <string name="splash_loading_config">Loading config...</string>
+    <string name="splash_loading_init">Initializing...</string>
+    <string name="splash_loading_subdomains">Syncing subdomain map...</string>
 </resources>

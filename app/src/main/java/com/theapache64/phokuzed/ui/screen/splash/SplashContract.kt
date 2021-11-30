@@ -1,10 +1,14 @@
 package com.theapache64.phokuzed.ui.screen.splash
 
+import androidx.annotation.StringRes
+
 // ViewState (ViewModel to UI - to render UI)
 sealed class SplashViewState {
-    object ConfigLoading : SplashViewState()
-    object ConfigLoaded : SplashViewState()
-    data class ConfigError(val message: String) : SplashViewState()
+    data class Loading(
+        @StringRes val message: Int
+    ) : SplashViewState()
+    object Success : SplashViewState()
+    data class Error(val message: String) : SplashViewState()
     object NoRootAccess : SplashViewState()
 }
 
