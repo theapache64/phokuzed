@@ -66,17 +66,18 @@ fun BlockListScreen(
             onDismissRequest = {
                 isShowAddDialog = false
             },
-            title = {
-                Text(text = stringResource(id = R.string.block_list_add_dialog_title))
-            },
             text = {
-                OutlinedTextField(
-                    value = newDomain,
-                    onValueChange = {
-                        newDomain = it
-                    },
-                    modifier = Modifier.focusRequester(focusRequester),
-                )
+                Column {
+                    Text(text = stringResource(id = R.string.block_list_add_dialog_title))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    OutlinedTextField(
+                        value = newDomain,
+                        onValueChange = {
+                            newDomain = it
+                        },
+                        modifier = Modifier.focusRequester(focusRequester),
+                    )
+                }
             },
             confirmButton = {
                 Button(onClick = {
