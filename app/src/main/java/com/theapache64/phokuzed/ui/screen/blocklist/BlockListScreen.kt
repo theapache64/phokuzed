@@ -1,5 +1,6 @@
 package com.theapache64.phokuzed.ui.screen.blocklist
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +38,8 @@ fun BlockListScreen(
     var newDomain by remember { mutableStateOf("") } // TODO: move to viewModel?
     val focusRequester = remember { FocusRequester() }
 
+    val context = LocalContext.current
+
     LaunchedEffect(viewAction) {
         when (viewAction) {
             BlockListViewAction.ShowAddDialog -> {
@@ -44,6 +48,11 @@ fun BlockListScreen(
             // TODO: To dismiss the dialog
             BlockListViewAction.DismissAddDialog -> {
                 isShowAddDialog = false
+            }
+
+            BlockListViewAction.InvalidDomain -> {
+                Toast.makeText(context, R.string.block_list_invalid_domain, Toast.LENGTH_SHORT)
+                    .show()
             }
 
             null -> {

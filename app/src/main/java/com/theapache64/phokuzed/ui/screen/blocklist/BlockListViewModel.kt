@@ -22,6 +22,9 @@ class BlockListViewModel @Inject constructor(
     companion object {
         // FIXME: Replace this with an enum to provide 2 modes in BlockList.
         const val ARG_SHOULD_ENABLE_REMOVE = "should_enable_remove"
+        val domainRegex by lazy {
+            """^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+${'$'}""".toRegex()
+        }
     }
 
     init {
@@ -71,22 +74,27 @@ class BlockListViewModel @Inject constructor(
     }
 
     private fun onAddDomainClick(domain: String) {
-        // TODO: Input validation
-        viewModelScope.launch {
-            val newBlockList = blockListRepo.getBlockList().toMutableSet().apply {
-                add(domain)
+        if (isValid(domain)) {
+            viewModelScope.launch {
+                val newBlockList = blockListRepo.getBlockList().toMutableSet().apply {
+                    add(domain)
+                }
+                blockListRepo.saveBlockList(newBlockList)
+                val shouldEnableRemove =
+                    getCurrentState<BlockListViewState.Active>()?.shouldEnableRemove
+                        ?: getCurrentState<BlockListViewState.BlockListEmpty>()?.shouldEnableRemove
+                        ?: error("TSH: The state should be either Active or BlockListEmpty")
+
+                onBlockListUpdated(newBlockList, shouldEnableRemove)
+
+                emitViewAction(BlockListViewAction.DismissAddDialog)
             }
-            blockListRepo.saveBlockList(newBlockList)
-            val shouldEnableRemove =
-                getCurrentState<BlockListViewState.Active>()?.shouldEnableRemove
-                    ?: getCurrentState<BlockListViewState.BlockListEmpty>()?.shouldEnableRemove
-                    ?: error("TSH: The state should be either Active or BlockListEmpty")
-
-            onBlockListUpdated(newBlockList, shouldEnableRemove)
+        } else {
+            emitViewAction(BlockListViewAction.InvalidDomain)
         }
-
-        emitViewAction(BlockListViewAction.DismissAddDialog)
     }
+
+    private fun isValid(domain: String) = domainRegex.matches(domain)
 
     private fun onAddClicked() {
         emitViewAction(BlockListViewAction.ShowAddDialog)

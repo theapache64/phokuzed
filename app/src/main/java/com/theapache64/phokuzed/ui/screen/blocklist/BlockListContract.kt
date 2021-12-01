@@ -24,4 +24,5 @@ sealed class BlockListInteractor {
 sealed class BlockListViewAction {
     object ShowAddDialog : BlockListViewAction()
     object DismissAddDialog : BlockListViewAction()
+    object InvalidDomain : BlockListViewAction()
 }
