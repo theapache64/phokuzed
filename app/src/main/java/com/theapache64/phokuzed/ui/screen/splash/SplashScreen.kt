@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
@@ -168,9 +169,14 @@ private fun BoxScope.Loading(
     Column(
         modifier = modifier
             .align(Alignment.BottomCenter)
-            .padding(bottom = 30.dp)
+            .padding(bottom = 30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = stringResource(id = message))
+        Text(
+            text = stringResource(id = message),
+            fontSize = 14.sp,
+            color = MaterialTheme.colors.onPrimary.copy(alpha = 0.5f)
+        )
         CircularProgressIndicator()
         Spacer(modifier = Modifier.height(10.dp))
         Text(text = SplashViewModel.versionName)

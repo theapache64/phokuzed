@@ -26,7 +26,7 @@ class SplashViewModelTest {
             }
         }
 
-        val viewModel = SplashViewModel(fakeConfigRepo, mock())
+        val viewModel = SplashViewModel(fakeConfigRepo, mock(), mock())
         viewModel.viewAction.test {
             viewModel.init()
             awaitItem().action.should.be.instanceof(SplashViewAction.ShowUpdateDialog::class.java)
@@ -45,7 +45,7 @@ class SplashViewModelTest {
         val rootRepo = mock<RootRepo> {
             onBlocking { isRooted() } doReturn true
         }
-        val viewModel = SplashViewModel(fakeConfigRepo, rootRepo)
+        val viewModel = SplashViewModel(fakeConfigRepo, rootRepo, mock())
         viewModel.viewAction.test {
             viewModel.init()
             awaitItem().action.should.be.instanceof(SplashViewAction.GoToMain::class.java)
@@ -59,7 +59,7 @@ class SplashViewModelTest {
             onBlocking { getLocalConfig() } doReturn Config(mandatoryVersionCode = Int.MAX_VALUE)
         }
 
-        val viewModel = SplashViewModel(fakeConfigRepo, mock())
+        val viewModel = SplashViewModel(fakeConfigRepo, mock(), mock())
         viewModel.viewAction.test {
             viewModel.onStart(mock())
             viewModel.onStart(mock())
@@ -69,7 +69,7 @@ class SplashViewModelTest {
 
     @Test
     fun `Clicking update launches a URL`() = runBlockingTest {
-        val viewModel = SplashViewModel(mock(), mock())
+        val viewModel = SplashViewModel(mock(), mock(), mock())
         viewModel.viewAction.test {
             viewModel.onInteraction(SplashInteractor.UpdateClick)
             awaitItem().action.should.instanceof(SplashViewAction.OpenUrl::class.java)

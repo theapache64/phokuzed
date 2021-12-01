@@ -98,7 +98,7 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    private fun performRootCheckAndGoToMainOrThrowErrorState(onRootAccess: () -> Unit) {
+    private fun performRootCheck(onRootAccess: () -> Unit) {
         viewModelScope.launch {
             if (rootRepo.isRooted()) {
                 Timber.d("performRootCheck: yey got root")
@@ -155,7 +155,7 @@ class SplashViewModel @Inject constructor(
 
     // TODO: Suggest better name if you have any :P
     private fun performRootCheckAndGoToMainOrThrowErrorState() {
-        performRootCheckAndGoToMainOrThrowErrorState {
+        performRootCheck {
             emitViewAction(SplashViewAction.GoToMain)
         }
     }
