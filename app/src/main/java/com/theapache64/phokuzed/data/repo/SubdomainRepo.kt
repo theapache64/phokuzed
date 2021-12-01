@@ -12,4 +12,5 @@ class SubdomainRepo @Inject constructor(
     fun getRemoteSubdomains() = api.getSubdomains()
     suspend fun nukeLocalSubdomains() = subdomainDao.nukeTable()
     suspend fun addAll(subdomains: List<Subdomain>) = subdomainDao.insertAll(subdomains)
+    suspend fun getLocalSubdomains(blockList: Set<String>) = subdomainDao.getSubdomains(blockList)
 }

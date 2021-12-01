@@ -12,7 +12,7 @@ data class Subdomain(
     @ColumnInfo(name = "main_domain")
     val mainDomain: String,
     @ColumnInfo(name = "sub_domains")
-    val subDomains: List<String>
+    val subDomains: Set<String>
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

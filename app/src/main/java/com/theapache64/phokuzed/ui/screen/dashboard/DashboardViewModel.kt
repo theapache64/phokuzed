@@ -5,6 +5,7 @@ import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.core.HostManager
 import com.theapache64.phokuzed.data.repo.BlockListRepo
 import com.theapache64.phokuzed.data.repo.HostRepo
+import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.data.repo.TimeRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.exhaustive
@@ -19,7 +20,8 @@ import kotlin.time.ExperimentalTime
 class DashboardViewModel @Inject constructor(
     private val timeRepo: TimeRepo,
     private val hostRepo: HostRepo,
-    private val blockListRepo: BlockListRepo
+    private val blockListRepo: BlockListRepo,
+    private val subdomainRepo: SubdomainRepo
 ) : BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
     defaultViewState = DashboardViewState.Idle
     // defaultViewState = DashboardViewState.Active((System.currentTimeMillis() / 1000) + (2 * 60)) // TODO : This should be idle
@@ -102,11 +104,16 @@ class DashboardViewModel @Inject constructor(
                 // get block list - list of domains
                 val blockList = blockListRepo.getBlockList()
 
+                val subDomains = subdomainRepo.getLocalSubdomains(blockList)
+
+                // blockList + subDomains
+                val expandedBlockList = blockList + subDomains.flatMap { it.subDomains }
+
                 // get host file content - list of domains and ips
                 val hostFileContent = hostRepo.getHostFileContent()
 
                 // install the blocklist inside the host file content
-                val newHostFileContent = HostManager(hostFileContent).applyBlockList(blockList)
+                val newHostFileContent = HostManager(hostFileContent).applyBlockList(expandedBlockList)
 
                 // update the host file with new content
                 val isUpdated = hostRepo.updateHostFileContent(newHostFileContent)

@@ -17,14 +17,14 @@ package com.theapache64.phokuzed.data.local.converter
 
 import androidx.room.TypeConverter
 
-class StringListConverter {
+class StringSetConverter {
     @TypeConverter
-    fun toStringList(value: String): List<String> {
-        return value.split(",")
+    fun toStringList(value: String): Set<String> {
+        return value.split(",").toSet()
     }
 
     @TypeConverter
-    fun fromStringList(list: List<String>): String {
+    fun fromStringList(list: Set<String>): String {
         return list.joinToString(separator = ",")
     }
 }
