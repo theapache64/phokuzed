@@ -40,7 +40,7 @@ fun BlockListScreen(
 
     val context = LocalContext.current
 
-    LaunchedEffect(viewAction) {
+    LaunchedEffect(dynViewAction) {
         when (viewAction) {
             BlockListViewAction.ShowAddDialog -> {
                 isShowAddDialog = true
