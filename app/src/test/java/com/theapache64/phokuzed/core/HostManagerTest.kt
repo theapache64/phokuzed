@@ -25,6 +25,8 @@ class HostManagerTest {
             ${HostManager.COMMENT_BEGIN}
             ${HostManager.UNKNOWN_IP_V4} $domainToBlock
             ${HostManager.UNKNOWN_IP_V6} $domainToBlock
+            ${HostManager.UNKNOWN_IP_V4} www.$domainToBlock
+            ${HostManager.UNKNOWN_IP_V6} www.$domainToBlock
             ${HostManager.COMMENT_END}
         """.trimIndent()
 
@@ -45,8 +47,12 @@ class HostManagerTest {
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
             :: instagram.com
+            0.0.0.0 www.instagram.com
+            :: www.instagram.com
             0.0.0.0 facebook.com
             :: facebook.com
+            0.0.0.0 www.facebook.com
+            :: www.facebook.com
             ${HostManager.COMMENT_END}
             # some comment
         """.trimIndent()
@@ -60,6 +66,8 @@ class HostManagerTest {
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
             :: instagram.com
+            0.0.0.0 www.instagram.com
+            :: www.instagram.com
             ${HostManager.COMMENT_END}
         """.trimIndent()
 
@@ -71,28 +79,20 @@ class HostManagerTest {
 
     @Test
     fun `Rules are removed from an empty host file`() {
-        // Test data
-        val inputHostFileContent = ""
 
-        val expectedHostFileContent = """
+        val inputHostFileContent = """
             ${HostManager.COMMENT_BEGIN}
             0.0.0.0 instagram.com
             :: instagram.com
             ${HostManager.COMMENT_END}
         """.trimIndent()
 
-        // First we'll add the rules
-        val appliedHostFileContent = HostManager(inputHostFileContent).run {
-            applyBlockList(setOf("instagram.com"))
-        }
-        expectedHostFileContent.should.equal(appliedHostFileContent)
-
         // Then remove the rules
-        val emptyHostFileContent = HostManager(expectedHostFileContent).run {
+        val emptyHostFileContent = HostManager(inputHostFileContent).run {
             clearRules()
         }
 
-        emptyHostFileContent.should.equal(inputHostFileContent)
+        emptyHostFileContent.should.equal("")
     }
 
     @Test
