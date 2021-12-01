@@ -26,4 +26,5 @@
     <string name="splash_loading_init">Initializing...</string>
     <string name="splash_loading_subdomains">Syncing subdomain map...</string>
     <string name="block_list_invalid_domain">Invalid domain</string>
+    <string name="block_list_hint_enter_domain">Enter domain</string>
 </resources>

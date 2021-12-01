@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.composable.CenterColumn
+import com.theapache64.phokuzed.ui.theme.Colors
 import com.theapache64.phokuzed.util.exhaustive
 
 @Suppress("UnnecessaryVariable")
@@ -76,6 +77,10 @@ fun BlockListScreen(
                             newDomain = it
                         },
                         modifier = Modifier.focusRequester(focusRequester),
+                        singleLine = true,
+                        placeholder = {
+                            Text(text = stringResource(id = R.string.block_list_hint_enter_domain))
+                        }
                     )
                 }
             },
@@ -85,7 +90,8 @@ fun BlockListScreen(
                 }) {
                     Text(text = stringResource(id = R.string.action_add))
                 }
-            }
+            },
+            backgroundColor = Colors.Daintree_200
         )
 
         LaunchedEffect(Unit) {

@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Daintree,
+    primary = Colors.Daintree,
     onPrimary = Color.White,
-    primaryVariant = Daintree_800,
-    secondary = Daintree_1000,
+    primaryVariant = Colors.Daintree_800,
+    secondary = Colors.Daintree_1000,
     onSecondary = Color.White,
-    surface = Daintree,
+    surface = Colors.Daintree,
     onSurface = Color.White,
 )
 
