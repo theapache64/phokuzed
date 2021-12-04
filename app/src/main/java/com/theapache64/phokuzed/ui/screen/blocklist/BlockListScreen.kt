@@ -22,6 +22,7 @@ import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.composable.CenterColumn
 import com.theapache64.phokuzed.ui.theme.Colors
 import com.theapache64.phokuzed.util.exhaustive
+import kotlinx.coroutines.delay
 
 @Suppress("UnnecessaryVariable")
 @Composable
@@ -37,7 +38,6 @@ fun BlockListScreen(
 
     var isShowAddDialog by remember { mutableStateOf(false) }
     var newDomain by remember { mutableStateOf("") } // TODO: move to viewModel?
-    val focusRequester = remember { FocusRequester() }
 
     val context = LocalContext.current
 
@@ -69,6 +69,7 @@ fun BlockListScreen(
             },
             text = {
                 Column {
+                    val focusRequester = remember { FocusRequester() }
                     Text(text = stringResource(id = R.string.block_list_add_dialog_title))
                     Spacer(modifier = Modifier.height(10.dp))
                     OutlinedTextField(
@@ -80,8 +81,12 @@ fun BlockListScreen(
                         singleLine = true,
                         placeholder = {
                             Text(text = stringResource(id = R.string.block_list_hint_enter_domain))
-                        }
+                        },
                     )
+                    LaunchedEffect(Unit) {
+                        delay(200) // Workaround for shorturl.at/lrIY1
+                        focusRequester.requestFocus()
+                    }
                 }
             },
             confirmButton = {
@@ -91,12 +96,8 @@ fun BlockListScreen(
                     Text(text = stringResource(id = R.string.action_add))
                 }
             },
-            backgroundColor = Colors.Daintree_200
+            backgroundColor = Colors.Daintree_200,
         )
-
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-        }
     }
 
     Scaffold(

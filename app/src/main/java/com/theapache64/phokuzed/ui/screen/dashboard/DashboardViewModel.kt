@@ -84,11 +84,11 @@ class DashboardViewModel @Inject constructor(
     @OptIn(ExperimentalTime::class)
     private fun onTimePicked(interactor: DashboardInteractor.TimePicked) {
         viewModelScope.launch {
-            // validation
-            if (interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
+            // TODO: validation
+            /*if (interactor.hour == 0 && interactor.minute <= MIN_DURATION_IN_MINUTES) {
                 emitViewAction(DashboardViewAction.ErrorMinTime)
                 return@launch
-            }
+            }*/
 
             emitViewState(DashboardViewState.Loading(R.string.dashboard_calculating_time))
 

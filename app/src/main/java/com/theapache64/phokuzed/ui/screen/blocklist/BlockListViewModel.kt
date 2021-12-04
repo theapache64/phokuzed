@@ -32,7 +32,16 @@ class BlockListViewModel @Inject constructor(
 
         viewModelScope.launch {
             val blockList = blockListRepo.getBlockList()
-            onBlockListUpdated(blockList, shouldEnableRemove)
+            if (blockList.isEmpty()) {
+                emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
+            } else {
+                emitViewState(
+                    BlockListViewState.Active(
+                        blockList,
+                        shouldEnableRemove = shouldEnableRemove
+                    )
+                )
+            }
         }
     }
 
