@@ -1,6 +1,7 @@
 package com.theapache64.phokuzed.ui.screen.dashboard
 
 import androidx.annotation.StringRes
+import com.theapache64.phokuzed.ui.screen.blocklist.Mode
 
 // ViewState (ViewModel to UI - to render UI)
 sealed class DashboardViewState {
@@ -25,5 +26,5 @@ sealed class DashboardInteractor {
 sealed class DashboardViewAction {
     object ShowDurationPicker : DashboardViewAction()
     object ErrorMinTime : DashboardViewAction()
-    data class GoToBlockList(val shouldEnableRemove: Boolean) : DashboardViewAction()
+    data class GoToBlockList(val mode: Mode) : DashboardViewAction()
 }

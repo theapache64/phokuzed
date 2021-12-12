@@ -84,7 +84,7 @@ fun BlockListScreen(
                         },
                     )
                     LaunchedEffect(Unit) {
-                        delay(200) // Workaround for shorturl.at/lrIY1
+                        delay(200) // Workaround for http://shorturl.at/lrIY1
                         focusRequester.requestFocus()
                     }
                 }

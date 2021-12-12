@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListScreen
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListViewModel
+import com.theapache64.phokuzed.ui.screen.blocklist.Mode
 import com.theapache64.phokuzed.ui.screen.dashboard.DashboardScreen
 import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 
@@ -15,7 +16,10 @@ import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 fun AppNavigation(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Screen.BlockList.route) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Splash.route
+    ) { // TODO: Temp
 
         // Splash
         composable(Screen.Splash.route) {
@@ -32,12 +36,8 @@ fun AppNavigation(
         // Dashboard
         composable(Screen.Dashboard.route) {
             DashboardScreen(
-                onEditBlockListClicked = { shouldEnableRemove ->
-                    navController.navigate(
-                        Screen.BlockList.createRoute(
-                            shouldEnableRemove = shouldEnableRemove
-                        )
-                    )
+                onGoToBlockList = { mode ->
+                    navController.navigate(Screen.BlockList.createRoute(mode))
                 }
             )
         }
@@ -46,9 +46,13 @@ fun AppNavigation(
         composable(
             Screen.BlockList.route,
             arguments = listOf(
-                navArgument(BlockListViewModel.ARG_SHOULD_ENABLE_REMOVE) {
-                    type = NavType.BoolType
-                    defaultValue = false
+                navArgument(BlockListViewModel.KEY_ARG_MODE) {
+                    // TODO: It works. but the API doesn't look good :(. Refactor later with something better maybe?
+                    type = NavType.fromArgType(
+                        "com.theapache64.phokuzed.ui.screen.blocklist.Mode",
+                        "com.theapache64.phokuzed.ui.screen.blocklist"
+                    )
+                    defaultValue = Mode.ADD
                 }
             )
         ) {

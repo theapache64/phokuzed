@@ -20,32 +20,30 @@ class BlockListViewModel @Inject constructor(
     defaultViewState = BlockListViewState.Loading
 ) {
     companion object {
-        // FIXME: Replace this with an enum to provide 2 modes in BlockList.
-        const val ARG_SHOULD_ENABLE_REMOVE = "should_enable_remove"
+        const val KEY_ARG_MODE = "mode"
         val domainRegex by lazy {
             """^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+${'$'}""".toRegex()
         }
     }
 
+    private val mode = (savedStateHandle.get<Mode>(KEY_ARG_MODE) ?: error("No mode passed"))
+    // .let { Mode.valueOf(it) } // Converting string to enum
+
     init {
-        val shouldEnableRemove = savedStateHandle.get<Boolean>(ARG_SHOULD_ENABLE_REMOVE)!!
 
         viewModelScope.launch {
             val blockList = blockListRepo.getBlockList()
             if (blockList.isEmpty()) {
-                emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
+                emitViewState(BlockListViewState.BlockListEmpty(mode))
             } else {
                 emitViewState(
-                    BlockListViewState.Active(
-                        blockList,
-                        shouldEnableRemove = shouldEnableRemove
-                    )
+                    BlockListViewState.Active(blockList, mode)
                 )
             }
         }
     }
 
-    private fun onBlockListUpdated(blockList: Set<String>, shouldEnableRemove: Boolean) {
+    private fun onBlockListUpdated(blockList: Set<String>, mode: Mode) {
         // FIXME: Call updateHostFileContent here
 
         viewModelScope.launch {
@@ -55,14 +53,9 @@ class BlockListViewModel @Inject constructor(
 
             if (isSuccess) {
                 if (blockList.isEmpty()) {
-                    emitViewState(BlockListViewState.BlockListEmpty(shouldEnableRemove))
+                    emitViewState(BlockListViewState.BlockListEmpty(mode))
                 } else {
-                    emitViewState(
-                        BlockListViewState.Active(
-                            blockList,
-                            shouldEnableRemove = shouldEnableRemove
-                        )
-                    )
+                    emitViewState(BlockListViewState.Active(blockList, mode))
                 }
             }
         }
@@ -89,12 +82,12 @@ class BlockListViewModel @Inject constructor(
                     add(domain)
                 }
                 blockListRepo.saveBlockList(newBlockList)
-                val shouldEnableRemove =
-                    getCurrentState<BlockListViewState.Active>()?.shouldEnableRemove
-                        ?: getCurrentState<BlockListViewState.BlockListEmpty>()?.shouldEnableRemove
+                val mode =
+                    getCurrentState<BlockListViewState.Active>()?.mode
+                        ?: getCurrentState<BlockListViewState.BlockListEmpty>()?.mode
                         ?: error("TSH: The state should be either Active or BlockListEmpty")
 
-                onBlockListUpdated(newBlockList, shouldEnableRemove)
+                onBlockListUpdated(newBlockList, mode)
 
                 emitViewAction(BlockListViewAction.DismissAddDialog)
             }
@@ -115,8 +108,9 @@ class BlockListViewModel @Inject constructor(
                 remove(domain)
             }.let { newBlockList ->
                 blockListRepo.saveBlockList(newBlockList)
-                val currentState: BlockListViewState.Active = getCurrentState()!!
-                onBlockListUpdated(newBlockList, currentState.shouldEnableRemove)
+                val currentState: BlockListViewState.Active =
+                    getCurrentState() ?: error("Current state can't be null")
+                onBlockListUpdated(newBlockList, currentState.mode)
             }
         }
     }

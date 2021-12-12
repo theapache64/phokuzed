@@ -20,6 +20,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
+import com.theapache64.phokuzed.ui.screen.blocklist.Mode
 import com.theapache64.phokuzed.util.exhaustive
 
 val bottomPadding = 30.dp
@@ -28,13 +29,13 @@ val bottomPadding = 30.dp
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
-    onEditBlockListClicked: (shouldEnableRemove: Boolean) -> Unit
+    onGoToBlockList: (mode: Mode) -> Unit
 ) {
     val dynViewState by viewModel.viewState.collectAsState()
     val viewState = dynViewState
     WatchViewAction(
         viewModel = viewModel,
-        onEditBlockListClicked = onEditBlockListClicked
+        onEditBlockListClicked = onGoToBlockList
     )
 
     Box(
@@ -82,7 +83,7 @@ fun DashboardScreen(
 @Composable
 private fun WatchViewAction(
     viewModel: DashboardViewModel,
-    onEditBlockListClicked: (shouldEnableRemove: Boolean) -> Unit
+    onEditBlockListClicked: (mode: Mode) -> Unit
 ) {
     val context = LocalContext.current
     val dynViewAction by viewModel.viewAction.collectAsState(null)
@@ -103,8 +104,7 @@ private fun WatchViewAction(
                 )
             }
             is DashboardViewAction.GoToBlockList -> {
-                val shouldEnableRemove = viewAction.shouldEnableRemove
-                onEditBlockListClicked.invoke(shouldEnableRemove)
+                onEditBlockListClicked.invoke(viewAction.mode)
             }
             DashboardViewAction.ErrorMinTime -> {
                 showMinTimeError(context)

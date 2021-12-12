@@ -24,7 +24,7 @@ class BlockListViewModelTest {
             },
             savedStateHandle = SavedStateHandle(
                 mapOf(
-                    BlockListViewModel.ARG_SHOULD_ENABLE_REMOVE to true
+                    BlockListViewModel.KEY_ARG_MODE to true
                 )
             ),
             hostRepo = mock() // FIXME:

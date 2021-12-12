@@ -8,6 +8,7 @@ import com.theapache64.phokuzed.data.repo.HostRepo
 import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.data.repo.TimeRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
+import com.theapache64.phokuzed.ui.screen.blocklist.Mode
 import com.theapache64.phokuzed.util.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -74,11 +75,11 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun onAddToBlockListClicked() {
-        emitViewAction(DashboardViewAction.GoToBlockList(shouldEnableRemove = false))
+        emitViewAction(DashboardViewAction.GoToBlockList(Mode.ADD))
     }
 
     private fun onEditBlockListClicked() {
-        emitViewAction(DashboardViewAction.GoToBlockList(shouldEnableRemove = true))
+        emitViewAction(DashboardViewAction.GoToBlockList(Mode.ADD_EDIT))
     }
 
     @OptIn(ExperimentalTime::class)
@@ -113,7 +114,8 @@ class DashboardViewModel @Inject constructor(
                 val hostFileContent = hostRepo.getHostFileContent()
 
                 // install the blocklist inside the host file content
-                val newHostFileContent = HostManager(hostFileContent).applyBlockList(expandedBlockList)
+                val newHostFileContent =
+                    HostManager(hostFileContent).applyBlockList(expandedBlockList)
 
                 // update the host file with new content
                 val isUpdated = hostRepo.updateHostFileContent(newHostFileContent)

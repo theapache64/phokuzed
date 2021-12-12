@@ -5,11 +5,11 @@ sealed class BlockListViewState {
     object Loading : BlockListViewState()
     data class Active(
         val blockList: Set<String>,
-        val shouldEnableRemove: Boolean
+        val mode: Mode
     ) : BlockListViewState()
 
     data class BlockListEmpty(
-        val shouldEnableRemove: Boolean
+        val mode: Mode
     ) : BlockListViewState()
 }
 
