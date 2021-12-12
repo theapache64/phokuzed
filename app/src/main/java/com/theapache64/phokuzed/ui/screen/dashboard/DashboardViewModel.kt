@@ -79,7 +79,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun onEditBlockListClicked() {
-        emitViewAction(DashboardViewAction.GoToBlockList(Mode.ADD_EDIT))
+        emitViewAction(DashboardViewAction.GoToBlockList(Mode.ADD_AND_REMOVE))
     }
 
     @OptIn(ExperimentalTime::class)

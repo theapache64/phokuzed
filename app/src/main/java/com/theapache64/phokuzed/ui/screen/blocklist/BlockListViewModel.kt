@@ -27,7 +27,6 @@ class BlockListViewModel @Inject constructor(
     }
 
     private val mode = (savedStateHandle.get<Mode>(KEY_ARG_MODE) ?: error("No mode passed"))
-    // .let { Mode.valueOf(it) } // Converting string to enum
 
     init {
 
@@ -36,20 +35,31 @@ class BlockListViewModel @Inject constructor(
             if (blockList.isEmpty()) {
                 emitViewState(BlockListViewState.BlockListEmpty(mode))
             } else {
-                emitViewState(
-                    BlockListViewState.Active(blockList, mode)
-                )
+                emitViewState(BlockListViewState.Active(blockList, mode))
             }
         }
     }
 
     private fun onBlockListUpdated(blockList: Set<String>, mode: Mode) {
-        // FIXME: Call updateHostFileContent here
-
         viewModelScope.launch {
-            val currentHostFileContent = hostRepo.getHostFileContent()
-            val newHostFileContent = HostManager(currentHostFileContent).applyBlockList(blockList)
-            val isSuccess = hostRepo.updateHostFileContent(newHostFileContent)
+            emitViewState(BlockListViewState.Loading)
+
+            val isSuccess = when (mode) {
+                Mode.ADD -> {
+                    // First add update the prefs
+                    blockListRepo.saveBlockList(blockList)
+
+                    // Then update the hosts file
+                    val currentHostFileContent = hostRepo.getHostFileContent()
+                    val newHostFileContent =
+                        HostManager(currentHostFileContent).applyBlockList(blockList)
+                    hostRepo.updateHostFileContent(newHostFileContent)
+                }
+                Mode.ADD_AND_REMOVE -> {
+                    blockListRepo.saveBlockList(blockList)
+                    true
+                }
+            }
 
             if (isSuccess) {
                 if (blockList.isEmpty()) {
@@ -75,7 +85,9 @@ class BlockListViewModel @Inject constructor(
         }.exhaustive()
     }
 
-    private fun onAddDomainClick(domain: String) {
+    private fun onAddDomainClick(_domain: String) {
+        val domain = _domain.trim()
+
         if (isValid(domain)) {
             viewModelScope.launch {
                 val newBlockList = blockListRepo.getBlockList().toMutableSet().apply {

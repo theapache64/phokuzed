@@ -79,6 +79,7 @@ fun BlockListScreen(
                         },
                         modifier = Modifier.focusRequester(focusRequester),
                         singleLine = true,
+                        maxLines = 1,
                         placeholder = {
                             Text(text = stringResource(id = R.string.block_list_hint_enter_domain))
                         },

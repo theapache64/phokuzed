@@ -34,7 +34,7 @@ fun ActiveBlockListUi(
                         text = domain
                     )
 
-                    if (activeState.mode == Mode.ADD_EDIT) {
+                    if (activeState.mode == Mode.ADD_AND_REMOVE) {
                         // If mode == alter, we'll show the delete domain button
                         IconButton(
                             onClick = { onRemoveDomainClicked.invoke(domain) },
