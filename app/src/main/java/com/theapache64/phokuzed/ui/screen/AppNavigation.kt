@@ -1,11 +1,11 @@
 package com.theapache64.phokuzed.ui.screen
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListScreen
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListViewModel
 import com.theapache64.phokuzed.ui.screen.blocklist.Mode
@@ -13,13 +13,12 @@ import com.theapache64.phokuzed.ui.screen.dashboard.DashboardScreen
 import com.theapache64.phokuzed.ui.screen.splash.SplashScreen
 
 @Composable
-fun AppNavigation(
-    navController: NavHostController
-) {
+fun AppNavigation() {
+    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
-    ) { // TODO: Temp
+    ) {
 
         // Splash
         composable(Screen.Splash.route) {

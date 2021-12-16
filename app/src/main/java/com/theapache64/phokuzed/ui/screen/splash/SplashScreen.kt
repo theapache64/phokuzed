@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
+import com.theapache64.phokuzed.ui.base.ViewAction
 import com.theapache64.phokuzed.util.exhaustive
 
 @Suppress("UnnecessaryVariable")
@@ -30,87 +30,84 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
     onSplashFinished: () -> Unit
 ) {
-
-    val context = LocalContext.current
-    val dynViewState by viewModel.viewState.collectAsState()
-    val viewState = dynViewState
-    val viewAction by viewModel.viewAction.collectAsState(null)
-
+    val activity = LocalContext.current as ComponentActivity
     LaunchedEffect(Unit) {
         viewModel.init()
-
-        if (context is ComponentActivity) {
-            context.lifecycle.addObserver(viewModel)
-        }
+        activity.lifecycle.addObserver(viewModel)
     }
 
-    // TODO: Handle update : show update dialog
-    when (viewAction?.action) {
-        is SplashViewAction.GoToMain -> {
-            onSplashFinished()
-        }
-        SplashViewAction.ShowUpdateDialog -> {
-            UpdateDialog(
-                onUpdateClicked = {
-                    viewModel.onInteraction(SplashInteractor.UpdateClick)
+    viewModel.viewAction.collectAsState(null).value?.let { viewAction ->
+        HandleViewAction(
+            viewAction = viewAction,
+            onSplashFinished = onSplashFinished,
+            onUpdateClicked = {
+                viewModel.onInteraction(SplashInteractor.UpdateClick)
+            }
+        )
+    }
+
+    viewModel.viewState.collectAsState().value.let { viewState ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            if (viewState !is SplashViewState.NoRootAccess) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_logo),
+                    contentDescription = stringResource(id = R.string.cd_app_logo),
+                    modifier = Modifier
+                        .size(100.dp)
+                        .align(Alignment.Center),
+                )
+            }
+
+            when (viewState) {
+                is SplashViewState.Loading -> {
+                    Loading(viewState.message)
                 }
-            )
+
+                is SplashViewState.Error -> {
+                    Text(text = (viewState as SplashViewState.Error).message)
+                }
+
+                SplashViewState.Success -> {
+                    // do nothing
+                }
+                SplashViewState.NoRootAccess -> {
+                    NoRootAccessUi(
+                        onRetryClicked = {
+                            viewModel.onInteraction(SplashInteractor.RetryRootCheckClick)
+                        }
+                    )
+                }
+            }.exhaustive()
         }
-        is SplashViewAction.OpenUrl -> {
-            // TODO: IDK if launching activity from here is a good thing
-            // TODO: Refactor
-            if (context is Activity) {
-                val urlToOpen = (viewAction?.action as SplashViewAction.OpenUrl).url
-                context.startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen))
-                )
-            }
-            Unit
-        }
-        null -> {
-            // do nothing
-        }
-    }.exhaustive()
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-        if (viewState !is SplashViewState.NoRootAccess) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_logo),
-                contentDescription = stringResource(id = R.string.cd_app_logo),
-                modifier = Modifier
-                    .size(100.dp)
-                    .align(Alignment.Center),
-            )
-        }
-
-        when (viewState) {
-            is SplashViewState.Loading -> {
-                Loading(viewState.message)
-            }
-
-            is SplashViewState.Error -> {
-                Text(text = (viewState as SplashViewState.Error).message)
-            }
-
-            SplashViewState.Success -> {
-                // do nothing
-            }
-            SplashViewState.NoRootAccess -> {
-                NoRootAccessUi(
-                    onRetryClicked = {
-                        viewModel.onInteraction(SplashInteractor.RetryRootCheckClick)
-                    }
-                )
-            }
-        }.exhaustive()
     }
 }
 
 @Composable
-fun BoxScope.NoRootAccessUi(
+private fun HandleViewAction(
+    viewAction: ViewAction<SplashViewAction>,
+    onSplashFinished: () -> Unit,
+    onUpdateClicked: () -> Unit,
+) {
+    val context = LocalContext.current as Activity
+    when (viewAction.action) {
+        is SplashViewAction.GoToMain -> {
+            onSplashFinished()
+        }
+        SplashViewAction.ShowUpdateDialog -> {
+            UpdateDialog(onUpdateClicked)
+        }
+        is SplashViewAction.OpenUrl -> {
+            val urlToOpen = viewAction.action.url
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen)))
+        }
+    }.exhaustive()
+}
+
+@Composable
+private fun BoxScope.NoRootAccessUi(
     onRetryClicked: () -> Unit
 ) {
     Column(
@@ -129,9 +126,8 @@ fun BoxScope.NoRootAccessUi(
     }
 }
 
-// BRB
 @Composable
-fun UpdateDialog(
+private fun UpdateDialog(
     onUpdateClicked: () -> Unit
 ) {
     AlertDialog(

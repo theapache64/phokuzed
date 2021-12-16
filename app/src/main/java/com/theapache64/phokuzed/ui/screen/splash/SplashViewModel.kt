@@ -30,10 +30,6 @@ class SplashViewModel @Inject constructor(
 ),
     DefaultLifecycleObserver {
 
-    init {
-        Timber.d("SplashViewModel: created")
-    }
-
     companion object {
         const val versionName = "v${BuildConfig.VERSION_NAME}"
         const val URL_PLAY_STORE =
@@ -64,55 +60,49 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    private fun onConfigLoaded(config: Config) {
+    private suspend fun onConfigLoaded(config: Config) {
         // Saving new config
         configRepo.saveRemoteConfig(config)
 
-        viewModelScope.launch {
-            subdomainRepo.getRemoteSubdomains()
-                .collect { response ->
-                    when (response) {
-                        is Resource.Idle -> {
-                            // do nothing
-                        }
-                        is Resource.Loading -> {
-                            emitViewState(SplashViewState.Loading(R.string.splash_loading_subdomains))
-                        }
-                        is Resource.Success -> {
-                            val newSubdomains = response.data.map { it.map() }
-                            onSubdomainsLoaded(newSubdomains)
-                        }
-                        is Resource.Error -> {
-                            emitViewState(SplashViewState.Error(response.errorData))
-                        }
-                    }.exhaustive()
-                }
-        }
-    }
-
-    private fun onSubdomainsLoaded(newSubdomains: List<Subdomain>) {
-        viewModelScope.launch {
-            subdomainRepo.nukeLocalSubdomains()
-            subdomainRepo.addAll(newSubdomains)
-            performRootCheckAndGoToMainOrThrowErrorState()
-        }
-    }
-
-    private fun performRootCheck(onRootAccess: () -> Unit) {
-        viewModelScope.launch {
-            if (rootRepo.isRooted()) {
-                Timber.d("performRootCheck: yey got root")
-                onRootAccess()
-            } else {
-                Timber.e("performRootCheck: uh ho no root")
-                emitViewState(SplashViewState.NoRootAccess)
+        subdomainRepo.getRemoteSubdomains()
+            .collect { response ->
+                when (response) {
+                    is Resource.Idle -> {
+                        // do nothing
+                    }
+                    is Resource.Loading -> {
+                        emitViewState(SplashViewState.Loading(R.string.splash_loading_subdomains))
+                    }
+                    is Resource.Success -> {
+                        val newSubdomains = response.data.map { it.map() }
+                        onSubdomainsLoaded(newSubdomains)
+                    }
+                    is Resource.Error -> {
+                        emitViewState(SplashViewState.Error(response.errorData))
+                    }
+                }.exhaustive()
             }
+    }
+
+    private suspend fun onSubdomainsLoaded(newSubdomains: List<Subdomain>) {
+        subdomainRepo.nukeLocalSubdomains()
+        subdomainRepo.addAll(newSubdomains)
+        performRootCheckAndGoToMainOrThrowErrorState()
+    }
+
+    private suspend fun performRootCheck(onRootAccess: () -> Unit) {
+        if (rootRepo.isRooted()) {
+            Timber.d("performRootCheck: yey got root")
+            onRootAccess()
+        } else {
+            Timber.e("performRootCheck: uh ho no root")
+            emitViewState(SplashViewState.NoRootAccess)
         }
     }
 
-    private fun performVersionCheck(
+    private suspend fun performVersionCheck(
         config: Config,
-        onValidVersion: () -> Unit
+        onValidVersion: suspend () -> Unit
     ) {
         // Version check
         val currentVersionCode = BuildConfig.VERSION_CODE
@@ -133,7 +123,10 @@ class SplashViewModel @Inject constructor(
                 emitViewAction(SplashViewAction.OpenUrl(URL_PLAY_STORE))
             }
             SplashInteractor.RetryRootCheckClick -> {
-                performRootCheckAndGoToMainOrThrowErrorState()
+                viewModelScope.launch {
+                    performRootCheckAndGoToMainOrThrowErrorState()
+                }
+                Unit
             }
         }.exhaustive()
     }
@@ -154,7 +147,7 @@ class SplashViewModel @Inject constructor(
     }
 
     // TODO: Suggest better name if you have any :P
-    private fun performRootCheckAndGoToMainOrThrowErrorState() {
+    private suspend fun performRootCheckAndGoToMainOrThrowErrorState() {
         performRootCheck {
             emitViewAction(SplashViewAction.GoToMain)
         }
