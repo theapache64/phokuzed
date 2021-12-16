@@ -22,7 +22,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.base.ViewAction
-import com.theapache64.phokuzed.util.exhaustive
 
 @Suppress("UnnecessaryVariable")
 @Composable
@@ -67,7 +66,7 @@ fun SplashScreen(
                 }
 
                 is SplashViewState.Error -> {
-                    Text(text = (viewState as SplashViewState.Error).message)
+                    Text(text = viewState.message)
                 }
 
                 SplashViewState.Success -> {
@@ -80,7 +79,7 @@ fun SplashScreen(
                         }
                     )
                 }
-            }.exhaustive()
+            }
         }
     }
 }
@@ -103,7 +102,7 @@ private fun HandleViewAction(
             val urlToOpen = viewAction.action.url
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen)))
         }
-    }.exhaustive()
+    }
 }
 
 @Composable

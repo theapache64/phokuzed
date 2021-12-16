@@ -13,7 +13,6 @@ import com.theapache64.phokuzed.data.repo.RootRepo
 import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
-import com.theapache64.phokuzed.util.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -80,7 +79,7 @@ class SplashViewModel @Inject constructor(
                     is Resource.Error -> {
                         emitViewState(SplashViewState.Error(response.errorData))
                     }
-                }.exhaustive()
+                }
             }
     }
 
@@ -126,9 +125,8 @@ class SplashViewModel @Inject constructor(
                 viewModelScope.launch {
                     performRootCheckAndGoToMainOrThrowErrorState()
                 }
-                Unit
             }
-        }.exhaustive()
+        }
     }
 
     var resumeCount = 0

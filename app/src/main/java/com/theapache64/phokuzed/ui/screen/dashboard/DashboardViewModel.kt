@@ -9,7 +9,6 @@ import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.data.repo.TimeRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.ui.screen.blocklist.Mode
-import com.theapache64.phokuzed.util.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -58,7 +57,7 @@ class DashboardViewModel @Inject constructor(
             is DashboardInteractor.TimePicked -> {
                 onTimePicked(interactor)
             }
-        }.exhaustive()
+        }
     }
 
     private fun onTimerFinished() {

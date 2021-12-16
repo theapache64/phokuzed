@@ -21,7 +21,6 @@ import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.composable.CenterColumn
 import com.theapache64.phokuzed.ui.theme.Colors
-import com.theapache64.phokuzed.util.exhaustive
 import kotlinx.coroutines.delay
 
 @Suppress("UnnecessaryVariable")
@@ -59,7 +58,7 @@ fun BlockListScreen(
             null -> {
                 // do nothing
             }
-        }.exhaustive()
+        }
     }
 
     if (isShowAddDialog) {
@@ -147,7 +146,7 @@ fun BlockListScreen(
             is BlockListViewState.BlockListEmpty -> {
                 EmptyUi()
             }
-        }.exhaustive()
+        }
     }
 }
 

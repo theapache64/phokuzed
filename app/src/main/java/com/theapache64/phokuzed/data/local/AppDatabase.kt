@@ -9,7 +9,8 @@ import com.theapache64.phokuzed.data.local.entity.Subdomain
 
 @Database(
     entities = [Subdomain::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(StringSetConverter::class)
 abstract class AppDatabase : RoomDatabase() {

@@ -6,7 +6,6 @@ import com.theapache64.phokuzed.core.HostManager
 import com.theapache64.phokuzed.data.repo.BlockListRepo
 import com.theapache64.phokuzed.data.repo.HostRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
-import com.theapache64.phokuzed.util.exhaustive
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -82,7 +81,7 @@ class BlockListViewModel @Inject constructor(
             is BlockListInteractor.AddDomainClick -> {
                 onAddDomainClick(interactor.domain)
             }
-        }.exhaustive()
+        }
     }
 
     private fun onAddDomainClick(_domain: String) {

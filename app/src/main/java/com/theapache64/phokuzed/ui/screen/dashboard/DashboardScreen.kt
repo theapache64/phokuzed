@@ -21,7 +21,6 @@ import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
 import com.theapache64.phokuzed.R
 import com.theapache64.phokuzed.ui.composable.CenterBox
 import com.theapache64.phokuzed.ui.screen.blocklist.Mode
-import com.theapache64.phokuzed.util.exhaustive
 
 val bottomPadding = 30.dp
 
@@ -75,7 +74,7 @@ fun DashboardScreen(
                     Text(text = viewState.reason)
                 }
             }
-        }.exhaustive()
+        }
     }
 }
 
@@ -112,7 +111,7 @@ private fun WatchViewAction(
             null -> {
                 // do nothing
             }
-        }.exhaustive()
+        }
     }
 }
 
