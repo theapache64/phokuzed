@@ -1,6 +1,5 @@
 package com.theapache64.phokuzed.ui.screen.splash
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.ComponentActivity
@@ -8,9 +7,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,25 +18,41 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.theapache64.phokuzed.R
-import com.theapache64.phokuzed.ui.base.ViewAction
 
 @Suppress("UnnecessaryVariable")
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
-    onSplashFinished: () -> Unit
+    onSplashFinished: () -> Unit,
 ) {
     val activity = LocalContext.current as ComponentActivity
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         viewModel.init()
         activity.lifecycle.addObserver(viewModel)
     }
 
-    viewModel.viewAction.collectAsState(null).value?.let { viewAction ->
-        HandleViewAction(
-            viewAction = viewAction,
-            onSplashFinished = onSplashFinished,
+    var showUpdateDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(viewModel) {
+        viewModel.viewAction.collect { viewAction ->
+            when (viewAction.action) {
+                is SplashViewAction.GoToMain -> {
+                    onSplashFinished()
+                }
+                SplashViewAction.ShowUpdateDialog -> {
+                    showUpdateDialog = true
+                }
+                is SplashViewAction.OpenUrl -> {
+                    val urlToOpen = viewAction.action.url
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen)))
+                }
+            }
+        }
+    }
+
+    if (showUpdateDialog) {
+        UpdateDialog(
             onUpdateClicked = {
+                showUpdateDialog = false
                 viewModel.onInteraction(SplashInteractor.UpdateClick)
             }
         )
@@ -85,29 +98,8 @@ fun SplashScreen(
 }
 
 @Composable
-private fun HandleViewAction(
-    viewAction: ViewAction<SplashViewAction>,
-    onSplashFinished: () -> Unit,
-    onUpdateClicked: () -> Unit,
-) {
-    val context = LocalContext.current as Activity
-    when (viewAction.action) {
-        is SplashViewAction.GoToMain -> {
-            onSplashFinished()
-        }
-        SplashViewAction.ShowUpdateDialog -> {
-            UpdateDialog(onUpdateClicked)
-        }
-        is SplashViewAction.OpenUrl -> {
-            val urlToOpen = viewAction.action.url
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlToOpen)))
-        }
-    }
-}
-
-@Composable
 private fun BoxScope.NoRootAccessUi(
-    onRetryClicked: () -> Unit
+    onRetryClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier.align(Alignment.Center),
@@ -127,7 +119,7 @@ private fun BoxScope.NoRootAccessUi(
 
 @Composable
 private fun UpdateDialog(
-    onUpdateClicked: () -> Unit
+    onUpdateClicked: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = {
@@ -159,7 +151,7 @@ private fun UpdateDialog(
 @Composable
 private fun BoxScope.Loading(
     @StringRes message: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier

@@ -9,12 +9,12 @@
     <string name="splash_action_update">UPDATE</string>
     <string name="action_start">START</string>
     <string name="action_edit_block">EDIT BLOCKLIST</string>
-    <string name="dashboard_calculating_time">Calculating time...</string>
+    <string name="dashboard_calculating_time">Calculating time…</string>
     <string name="action_add_to_blocklist">ADD TO BLOCKLIST</string>
     <string name="action_retry">RETRY</string>
     <string name="splash_no_root">Uh ho! It looks like there\'s no root access 😢</string>
-    <string name="dashboard_writing_rules">Writing rules...</string>
-    <string name="block_list_loading">Loading block list...</string>
+    <string name="dashboard_writing_rules">Writing rules…</string>
+    <string name="block_list_loading">Loading block list…</string>
     <string name="block_list_title">Block List</string>
     <string name="block_list_cd_remove_domain">remove domain</string>
     <string name="action_extend_timer">EXTEND TIMER</string>
@@ -22,9 +22,10 @@
     <string name="block_list_add_dialog_title">Add new domain</string>
     <string name="action_add">ADD</string>
     <string name="dashboard_min_time_error">Duration should be above %d minutes</string>
-    <string name="splash_loading_config">Loading config...</string>
-    <string name="splash_loading_init">Initializing...</string>
-    <string name="splash_loading_subdomains">Syncing subdomain map...</string>
+    <string name="splash_loading_config">Loading config…</string>
+    <string name="splash_verifying_version">Verifying version…</string>
+    <string name="splash_loading_init">Initializing…</string>
+    <string name="splash_loading_subdomains">Syncing subdomain map…</string>
     <string name="block_list_invalid_domain">Invalid domain</string>
     <string name="block_list_hint_enter_domain">Enter domain</string>
 </resources>

@@ -14,7 +14,6 @@ import com.theapache64.phokuzed.data.repo.SubdomainRepo
 import com.theapache64.phokuzed.ui.base.BaseViewModel
 import com.theapache64.phokuzed.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val configRepo: ConfigRepo,
     private val rootRepo: RootRepo,
-    private val subdomainRepo: SubdomainRepo
+    private val subdomainRepo: SubdomainRepo,
 ) : BaseViewModel<SplashViewState, SplashInteractor, SplashViewAction>(
     defaultViewState = SplashViewState.Loading(R.string.splash_loading_init)
 ),
@@ -63,24 +62,27 @@ class SplashViewModel @Inject constructor(
         // Saving new config
         configRepo.saveRemoteConfig(config)
 
-        subdomainRepo.getRemoteSubdomains()
-            .collect { response ->
-                when (response) {
-                    is Resource.Idle -> {
-                        // do nothing
-                    }
-                    is Resource.Loading -> {
-                        emitViewState(SplashViewState.Loading(R.string.splash_loading_subdomains))
-                    }
-                    is Resource.Success -> {
-                        val newSubdomains = response.data.map { it.map() }
-                        onSubdomainsLoaded(newSubdomains)
-                    }
-                    is Resource.Error -> {
-                        emitViewState(SplashViewState.Error(response.errorData))
+        emitViewState(SplashViewState.Loading(R.string.splash_verifying_version))
+        performVersionCheck(config) {
+            subdomainRepo.getRemoteSubdomains()
+                .collect { response ->
+                    when (response) {
+                        is Resource.Idle -> {
+                            // do nothing
+                        }
+                        is Resource.Loading -> {
+                            emitViewState(SplashViewState.Loading(R.string.splash_loading_subdomains))
+                        }
+                        is Resource.Success -> {
+                            val newSubdomains = response.data.map { it.map() }
+                            onSubdomainsLoaded(newSubdomains)
+                        }
+                        is Resource.Error -> {
+                            emitViewState(SplashViewState.Error(response.errorData))
+                        }
                     }
                 }
-            }
+        }
     }
 
     private suspend fun onSubdomainsLoaded(newSubdomains: List<Subdomain>) {
@@ -101,7 +103,7 @@ class SplashViewModel @Inject constructor(
 
     private suspend fun performVersionCheck(
         config: Config,
-        onValidVersion: suspend () -> Unit
+        onValidVersion: suspend () -> Unit,
     ) {
         // Version check
         val currentVersionCode = BuildConfig.VERSION_CODE
@@ -129,11 +131,11 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    var resumeCount = 0
+    var isFirstOnStart = true
 
     override fun onStart(owner: LifecycleOwner) {
-        resumeCount++
-        if (resumeCount > 1) {
+        if (!isFirstOnStart) {
+            println("Checking...")
             // After every resume, do version check
             viewModelScope.launch {
                 val config = configRepo.getLocalConfig()
@@ -142,6 +144,8 @@ class SplashViewModel @Inject constructor(
                 }
             }
         }
+
+        isFirstOnStart = false
     }
 
     // TODO: Suggest better name if you have any :P
