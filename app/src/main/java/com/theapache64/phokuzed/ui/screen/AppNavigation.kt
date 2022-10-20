@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListScreen
 import com.theapache64.phokuzed.ui.screen.blocklist.BlockListViewModel
 import com.theapache64.phokuzed.ui.screen.blocklist.Mode

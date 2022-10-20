@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Surface
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.FragmentActivity
 import com.theapache64.phokuzed.ui.theme.PhokuzedTheme
 import dagger.hilt.android.AndroidEntryPoint
