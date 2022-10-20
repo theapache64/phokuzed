@@ -17,8 +17,8 @@ package com.theapache64.phokuzed.test
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
@@ -26,10 +26,8 @@ import org.junit.runner.Description
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainCoroutineRule(
-    private val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher(),
-) :
-    TestWatcher(),
-    TestCoroutineScope by TestCoroutineScope(dispatcher) {
+    private val dispatcher: TestDispatcher = StandardTestDispatcher(),
+) : TestWatcher() {
 
     override fun starting(description: Description) {
         super.starting(description)

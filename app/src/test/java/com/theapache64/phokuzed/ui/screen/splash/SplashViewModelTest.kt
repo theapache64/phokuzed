@@ -5,10 +5,13 @@ import com.github.theapache64.expekt.should
 import com.theapache64.phokuzed.data.remote.Config
 import com.theapache64.phokuzed.data.repo.ConfigRepo
 import com.theapache64.phokuzed.data.repo.RootRepo
+import com.theapache64.phokuzed.data.repo.SubdomainRepo
+import com.theapache64.phokuzed.test.MainCoroutineRule
 import com.theapache64.phokuzed.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -16,8 +19,11 @@ import org.mockito.kotlin.mock
 @ExperimentalCoroutinesApi
 class SplashViewModelTest {
 
+    @get:Rule
+    val rule = MainCoroutineRule()
+
     @Test
-    fun `Shows update dialog for older version`() = runBlockingTest {
+    fun `Shows update dialog for older version`() = runTest {
         // Fake repo
         val fakeConfigRepo = mock<ConfigRepo> {
             on { getRemoteConfig() } doReturn flow {
@@ -34,7 +40,7 @@ class SplashViewModelTest {
     }
 
     @Test
-    fun `Goes to main for newer versions`() = runBlockingTest {
+    fun `Goes to main for newer versions`() = runTest {
         // Fake repo
         val fakeConfigRepo = mock<ConfigRepo> {
             on { getRemoteConfig() } doReturn flow {
@@ -42,10 +48,16 @@ class SplashViewModelTest {
                 emit(Resource.Success(fakeConfig))
             }
         }
+
+        val fakeSubdomainRepo = mock<SubdomainRepo> {
+            on { getRemoteSubdomains() } doReturn flow {
+                emit(Resource.Success(listOf()))
+            }
+        }
         val rootRepo = mock<RootRepo> {
             onBlocking { isRooted() } doReturn true
         }
-        val viewModel = SplashViewModel(fakeConfigRepo, rootRepo, mock())
+        val viewModel = SplashViewModel(fakeConfigRepo, rootRepo, fakeSubdomainRepo)
         viewModel.viewAction.test {
             viewModel.init()
             awaitItem().action.should.be.instanceof(SplashViewAction.GoToMain::class.java)
@@ -53,7 +65,7 @@ class SplashViewModelTest {
     }
 
     @Test
-    fun `Version check happens on every onStart except the first`() = runBlockingTest {
+    fun `Version check happens on every onStart except the first`() = runTest {
         // Fake repo
         val fakeConfigRepo = mock<ConfigRepo> {
             onBlocking { getLocalConfig() } doReturn Config(mandatoryVersionCode = Int.MAX_VALUE)
@@ -68,7 +80,7 @@ class SplashViewModelTest {
     }
 
     @Test
-    fun `Clicking update launches a URL`() = runBlockingTest {
+    fun `Clicking update launches a URL`() = runTest {
         val viewModel = SplashViewModel(mock(), mock(), mock())
         viewModel.viewAction.test {
             viewModel.onInteraction(SplashInteractor.UpdateClick)

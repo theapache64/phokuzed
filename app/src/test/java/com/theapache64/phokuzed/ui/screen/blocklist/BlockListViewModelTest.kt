@@ -3,8 +3,10 @@ package com.theapache64.phokuzed.ui.screen.blocklist
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.github.theapache64.expekt.should
+import com.theapache64.phokuzed.test.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -12,8 +14,11 @@ import org.mockito.kotlin.mock
 @OptIn(ExperimentalCoroutinesApi::class)
 class BlockListViewModelTest {
 
+    @get:Rule
+    val rule = MainCoroutineRule()
+
     @Test
-    fun `Delete removes data and updates UI`() = runBlockingTest {
+    fun `Delete removes data and updates UI`() = runTest {
         val fakeDomains = setOf(
             "facebook.com",
             "instagram.com"
@@ -24,7 +29,7 @@ class BlockListViewModelTest {
             },
             savedStateHandle = SavedStateHandle(
                 mapOf(
-                    BlockListViewModel.KEY_ARG_MODE to true
+                    BlockListViewModel.KEY_ARG_MODE to Mode.ADD_AND_REMOVE
                 )
             ),
             hostRepo = mock() // FIXME:
@@ -32,18 +37,26 @@ class BlockListViewModelTest {
 
         viewModel.viewState.test {
             awaitItem().let { firstState ->
-                firstState.should.be.instanceof(BlockListViewState.Active::class.java)
-                firstState as BlockListViewState.Active
-                firstState.blockList.should.equal(fakeDomains)
+                firstState.should.be.instanceof(BlockListViewState.Loading::class.java)
+            }
 
-                // now remove facebook.com
-                viewModel.onInteraction(BlockListInteractor.RemoveDomainClick("facebook.com"))
+            awaitItem().let { secondState ->
+                secondState.should.be.instanceof(BlockListViewState.Active::class.java)
+                secondState as BlockListViewState.Active
+                secondState.blockList.should.equal(fakeDomains)
+            }
 
-                awaitItem().let { secondState ->
-                    secondState.should.be.instanceof(BlockListViewState.Active::class.java)
-                    secondState as BlockListViewState.Active
-                    secondState.blockList.should.equal(setOf("instagram.com"))
-                }
+            // now remove facebook.com
+            viewModel.onInteraction(BlockListInteractor.RemoveDomainClick("facebook.com"))
+
+            awaitItem().let { thirdState ->
+                thirdState.should.be.instanceof(BlockListViewState.Loading::class.java)
+            }
+
+            awaitItem().let { fourthState ->
+                fourthState.should.be.instanceof(BlockListViewState.Active::class.java)
+                fourthState as BlockListViewState.Active
+                fourthState.blockList.should.equal(setOf("instagram.com"))
             }
         }
     }
