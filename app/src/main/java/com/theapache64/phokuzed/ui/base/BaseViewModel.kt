@@ -3,22 +3,22 @@ package com.theapache64.phokuzed.ui.base
 import androidx.lifecycle.ViewModel
 import com.theapache64.phokuzed.util.flow.mutableEventFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ViewAction<VA>(
-    val action: VA
+    val action: VA,
 )
 
 abstract class BaseViewModel<VS, I, VA>(
-    defaultViewState: VS
+    defaultViewState: VS,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(defaultViewState)
-    val viewState = _viewState.asStateFlow()
+    val viewState: StateFlow<VS> = _viewState
 
     private val _viewAction = mutableEventFlow<ViewAction<VA>>()
-    val viewAction = _viewAction.asSharedFlow()
+    val viewAction: SharedFlow<ViewAction<VA>> = _viewAction
 
     abstract fun onInteraction(interactor: I)
 
