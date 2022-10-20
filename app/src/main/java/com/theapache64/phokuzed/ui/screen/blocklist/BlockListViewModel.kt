@@ -2,6 +2,7 @@ package com.theapache64.phokuzed.ui.screen.blocklist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.theapache64.phokuzed.core.HostExtender
 import com.theapache64.phokuzed.core.HostManager
 import com.theapache64.phokuzed.data.repo.BlockListRepo
 import com.theapache64.phokuzed.data.repo.HostRepo
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class BlockListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val blockListRepo: BlockListRepo,
-    private val hostRepo: HostRepo
+    private val hostRepo: HostRepo,
+    private val hostExtender: HostExtender,
 ) : BaseViewModel<BlockListViewState, BlockListInteractor, BlockListViewAction>(
     defaultViewState = BlockListViewState.Loading
 ) {
@@ -48,10 +50,12 @@ class BlockListViewModel @Inject constructor(
                     // First add update the prefs
                     blockListRepo.saveBlockList(blockList)
 
+                    val extendedHostList = hostExtender.getExtendedHosts(blockList)
+
                     // Then update the hosts file
                     val currentHostFileContent = hostRepo.getHostFileContent()
                     val newHostFileContent =
-                        HostManager(currentHostFileContent).applyBlockList(blockList)
+                        HostManager(currentHostFileContent).applyBlockList(extendedHostList)
                     hostRepo.updateHostFileContent(newHostFileContent)
                 }
                 Mode.ADD_AND_REMOVE -> {

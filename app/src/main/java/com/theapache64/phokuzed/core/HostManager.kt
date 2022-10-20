@@ -43,7 +43,6 @@ class HostManager(
             error("domainSet can't be empty")
         }
 
-        // TODO: Generate possible subdomains like api.domain.com
         // first remove the existing p-rules
         val freshHostFileContent = clearRules()
         val optionalNewLine =

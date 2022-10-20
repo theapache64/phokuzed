@@ -2,6 +2,7 @@ package com.theapache64.phokuzed.ui.screen.dashboard
 
 import androidx.lifecycle.viewModelScope
 import com.theapache64.phokuzed.R
+import com.theapache64.phokuzed.core.HostExtender
 import com.theapache64.phokuzed.core.HostManager
 import com.theapache64.phokuzed.data.repo.BlockListRepo
 import com.theapache64.phokuzed.data.repo.HostRepo
@@ -13,7 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 @HiltViewModel
@@ -21,7 +23,8 @@ class DashboardViewModel @Inject constructor(
     private val timeRepo: TimeRepo,
     private val hostRepo: HostRepo,
     private val blockListRepo: BlockListRepo,
-    private val subdomainRepo: SubdomainRepo
+    private val subdomainRepo: SubdomainRepo,
+    private val hostExtender: HostExtender,
 ) : BaseViewModel<DashboardViewState, DashboardInteractor, DashboardViewAction>(
     defaultViewState = DashboardViewState.Idle
     // defaultViewState = DashboardViewState.Active((System.currentTimeMillis() / 1000) + (2 * 60)) // TODO : This should be idle
@@ -92,8 +95,8 @@ class DashboardViewModel @Inject constructor(
 
             emitViewState(DashboardViewState.Loading(R.string.dashboard_calculating_time))
 
-            val hoursInSeconds = Duration.hours(interactor.hour).inWholeSeconds
-            val minutesInSeconds = Duration.minutes(interactor.minute).inWholeSeconds
+            val hoursInSeconds = interactor.hour.hours.inWholeSeconds
+            val minutesInSeconds = interactor.minute.minutes.inWholeSeconds
 
             try {
                 val targetSeconds =
@@ -101,20 +104,16 @@ class DashboardViewModel @Inject constructor(
                 timeRepo.saveTargetSeconds(targetSeconds)
 
                 emitViewState(DashboardViewState.Loading(R.string.dashboard_writing_rules))
-                // get block list - list of domains
-                val blockList = blockListRepo.getBlockList()
-
-                val subDomains = subdomainRepo.getLocalSubdomains(blockList)
-
-                // blockList + subDomains
-                val expandedBlockList = blockList + subDomains.flatMap { it.subDomains }
 
                 // get host file content - list of domains and ips
                 val hostFileContent = hostRepo.getHostFileContent()
 
+                val expandedBlockList = hostExtender.getExtendedHosts(
+                    blockList = blockListRepo.getBlockList()
+                )
+
                 // install the blocklist inside the host file content
-                val newHostFileContent =
-                    HostManager(hostFileContent).applyBlockList(expandedBlockList)
+                val newHostFileContent = HostManager(hostFileContent).applyBlockList(expandedBlockList)
 
                 // update the host file with new content
                 val isUpdated = hostRepo.updateHostFileContent(newHostFileContent)
