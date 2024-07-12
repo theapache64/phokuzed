@@ -32,7 +32,8 @@ class BlockListViewModelTest {
                     BlockListViewModel.KEY_ARG_MODE to Mode.ADD_AND_REMOVE
                 )
             ),
-            hostRepo = mock() // FIXME:
+            hostRepo = mock(),
+            hostExtender = mock()
         )
 
         viewModel.viewState.test {

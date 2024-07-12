@@ -23,7 +23,7 @@ class BlockListViewModel @Inject constructor(
     companion object {
         const val KEY_ARG_MODE = "mode"
         val domainRegex by lazy {
-            """^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+${'$'}""".toRegex()
+            """^[a-zA-Z0-9]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+${'$'}""".toRegex()
         }
     }
 

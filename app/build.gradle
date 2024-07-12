@@ -7,7 +7,9 @@ plugins {
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
+// Add namespace
 android {
+    namespace 'com.theapache64.phokuzed'
     compileSdk 33
 
     defaultConfig {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
